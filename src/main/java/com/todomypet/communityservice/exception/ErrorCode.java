@@ -15,6 +15,7 @@ public enum ErrorCode {
     NOT_EXISTS_RELATIONSHIP(HttpStatus.BAD_REQUEST, "C006", "존재하지 않는 관계에 대한 삭제 요청입니다."),
     REPLY_NOT_EXISTS(HttpStatus.BAD_REQUEST, "C007" , "존재하지 않는 댓글입니다."),
     DELETED_REPLY(HttpStatus.BAD_REQUEST, "C008", "삭제된 댓글에 대한 요청입니다."),
+    FILE_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "C009", "파일 업로드에 실패했습니다."),
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 사용자입니다."),
     ;
 

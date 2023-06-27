@@ -6,6 +6,9 @@ import com.todomypet.communityservice.dto.SuccessResDTO;
 import com.todomypet.communityservice.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -16,8 +19,9 @@ public class BoardController {
 
     @PostMapping("/board")
     public SuccessResDTO<PostResDTO> post(@RequestHeader String userId,
-                                          @RequestPart(value="postInfo") PostReqDTO postReqDTO) {
-        String responseId = boardService.post(userId, postReqDTO);
+                                          @RequestPart(value="postInfo") PostReqDTO postReqDTO,
+                                          @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
+        String responseId = boardService.post(userId, postReqDTO, multipartFileList);
         PostResDTO postResDTO = PostResDTO.builder().id(responseId).build();
         return new SuccessResDTO<PostResDTO>(postResDTO);
     }

@@ -13,9 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -26,15 +29,24 @@ public class BoardServiceImpl implements BoardService{
     private final PostRepository postRepository;
     private final WriteRepository writeRepository;
     private final LikeRepository likeRepository;
+    private final S3Uploader s3Uploader;
 
     @Override
     @Transactional
-    public String post(String userId, PostReqDTO postReqDTO) {
+    public String post(String userId, PostReqDTO postReqDTO, List<MultipartFile> multipartFileList) {
         if (postReqDTO.getContent() == null) {
             throw new CustomException(ErrorCode.POST_CONTENT_NULL);
         }
 
         User user = userRepository.findUserById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+
+        List<String> imgList = new ArrayList<>();
+        if (multipartFileList != null) {
+            for (MultipartFile multipartFile : multipartFileList) {
+                imgList.add(s3Uploader.upload(multipartFile));
+            }
+        }
+
         Post post = Post.builder()
                 .createdAt(LocalDateTime.parse(LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
@@ -42,6 +54,7 @@ public class BoardServiceImpl implements BoardService{
                 .deleted(false)
                 .replyCount(0)
                 .likeCount(0)
+                .imageUrl(imgList)
                 .build();
         String responseId = postRepository.save(post).getId();
         writeRepository.setWriteRelationship(userId, responseId);

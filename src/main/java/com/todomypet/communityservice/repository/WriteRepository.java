@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WriteRepository extends Neo4jRepository<Write, Long> {
-    @Query("MATCH (post:Post{id:$postId}), (user:User{id:$userId}) " +
+    @Query("MATCH (post:Post{id:$postId}) WITH post MATCH (user:User{id:$userId}) " +
            "CREATE (post)<-[:WRITE]-(user)")
     void setWriteRelationship(String userId, String postId);
 

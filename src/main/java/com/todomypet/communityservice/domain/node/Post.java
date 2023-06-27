@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.*;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Node("Post")
@@ -32,6 +33,9 @@ public class Post {
 
     @Property("reply_count")
     private Integer replyCount;
+
+    @Property("image_url")
+    private List<String> imageUrl;
 
     @Relationship(type = "WRITE", direction = Relationship.Direction.INCOMING)
     private Write write;
