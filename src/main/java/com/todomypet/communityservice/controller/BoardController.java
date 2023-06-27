@@ -1,8 +1,6 @@
 package com.todomypet.communityservice.controller;
 
-import com.todomypet.communityservice.dto.PostReqDTO;
-import com.todomypet.communityservice.dto.PostResDTO;
-import com.todomypet.communityservice.dto.SuccessResDTO;
+import com.todomypet.communityservice.dto.*;
 import com.todomypet.communityservice.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +28,14 @@ public class BoardController {
     public SuccessResDTO<Void> deletePost(@RequestHeader String userId, @PathVariable String postId) {
         boardService.deletePost(userId, postId);
         return new SuccessResDTO<>(null);
+    }
+
+    @PutMapping("/board/{postId}")
+    public SuccessResDTO<PostUpdateResDTO> updatePost(@RequestHeader String userId, @PathVariable String postId,
+                                                      @RequestPart(value = "postInfo") PostUpdateReqDTO postUpdateReqDTO,
+                                                      @RequestPart(value = "imageUrls", required = false) List<MultipartFile> multipartFileList) {
+        boardService.updatePost(userId, postId, postUpdateReqDTO, multipartFileList);
+        PostUpdateResDTO response = PostUpdateResDTO.builder().id(postId).build();
+        return new SuccessResDTO<PostUpdateResDTO>(response);
     }
 }

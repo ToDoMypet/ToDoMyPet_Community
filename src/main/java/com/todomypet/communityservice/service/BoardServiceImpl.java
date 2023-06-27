@@ -3,6 +3,7 @@ package com.todomypet.communityservice.service;
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.PostReqDTO;
+import com.todomypet.communityservice.dto.PostUpdateReqDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
 import com.todomypet.communityservice.repository.LikeRepository;
@@ -74,5 +75,27 @@ public class BoardServiceImpl implements BoardService{
             throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TO_POST);
         }
         postRepository.deletePostById(postId);
+    }
+
+    @Override
+    public void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO, List<MultipartFile> multipartFileList) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
+        if (post.getDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_POST);
+        }
+        User user = userRepository.findWriterByPostId(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+        if (!user.getId().equals(userId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TO_POST);
+        }
+
+        List<String> imgList = new ArrayList<>();
+        if (multipartFileList != null) {
+            for (MultipartFile multipartFile : multipartFileList) {
+                imgList.add(s3Uploader.upload(multipartFile));
+            }
+        }
+
+        postRepository.updatePost(postId, postUpdateReqDTO.getContent(), imgList.toString());
     }
 }
