@@ -20,7 +20,7 @@ public class Reply {
     @Property("content")
     private String content;
 
-    @Property("created_at")
+    @Property("createdAt")
     private LocalDateTime createdAt;
 
     @Property("deleted")

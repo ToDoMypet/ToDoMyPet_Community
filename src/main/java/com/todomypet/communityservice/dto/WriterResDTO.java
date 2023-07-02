@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class PostResDTO {
-    private PostInfoResDTO postInfo;
-    private WriterResDTO writer;
+public class WriterResDTO {
+    private String id;
 }

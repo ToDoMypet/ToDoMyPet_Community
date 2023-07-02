@@ -22,19 +22,19 @@ public class Post {
     @Property("content")
     private String content;
 
-    @Property("created_at")
+    @Property("createdAt")
     private LocalDateTime createdAt;
 
     @Property("deleted")
     private Boolean deleted;
 
-    @Property("like_count")
+    @Property("likeCount")
     private Integer likeCount;
 
-    @Property("reply_count")
+    @Property("replyCount")
     private Integer replyCount;
 
-    @Property("image_url")
+    @Property("imageUrl")
     private List<String> imageUrl;
 
     @Relationship(type = "WRITE", direction = Relationship.Direction.INCOMING)

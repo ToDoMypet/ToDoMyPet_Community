@@ -16,12 +16,12 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/board")
-    public SuccessResDTO<PostResDTO> post(@RequestHeader String userId,
-                                          @RequestPart(value="postInfo") PostReqDTO postReqDTO,
-                                          @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
-        String responseId = boardService.post(userId, postReqDTO, multipartFileList);
-        PostResDTO postResDTO = PostResDTO.builder().id(responseId).build();
-        return new SuccessResDTO<PostResDTO>(postResDTO);
+    public SuccessResDTO<WritePostResDTO> WritePost(@RequestHeader String userId,
+                                               @RequestPart(value="postInfo") WritePostReqDTO writePostReqDTO,
+                                               @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
+        String responseId = boardService.post(userId, writePostReqDTO, multipartFileList);
+        WritePostResDTO writePostResDTO = WritePostResDTO.builder().id(responseId).build();
+        return new SuccessResDTO<WritePostResDTO>(writePostResDTO);
     }
 
     @DeleteMapping("/board/{postId}")
@@ -37,5 +37,11 @@ public class BoardController {
         boardService.updatePost(userId, postId, postUpdateReqDTO, multipartFileList);
         PostUpdateResDTO response = PostUpdateResDTO.builder().id(postId).build();
         return new SuccessResDTO<PostUpdateResDTO>(response);
+    }
+
+    @GetMapping("/board/my")
+    public SuccessResDTO<BoardListResDTO> getMyPostList(@RequestHeader String userId) {
+        BoardListResDTO response = boardService.getMyPostList(userId);
+        return new SuccessResDTO<BoardListResDTO>(response);
     }
 }

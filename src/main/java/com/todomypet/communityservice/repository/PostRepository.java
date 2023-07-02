@@ -1,9 +1,11 @@
 package com.todomypet.communityservice.repository;
 
 import com.todomypet.communityservice.domain.node.Post;
+import com.todomypet.communityservice.dto.GetPostDTO;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends Neo4jRepository<Post, String> {
@@ -27,4 +29,9 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
 
     @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.image_url = $imgUrl")
     void updatePost(String postId, String content, String imgUrl);
+
+    @Query("MATCH (user:User)-[:WRITE]->(post:Post) " +
+            "WHERE user.id = $userId " +
+            "RETURN user{.id} AS writer, post{.content, .createdAt, .imageUrl, .likeCount, .replyCount} AS postInfo")
+    List<GetPostDTO> getPostListByUserId(String userId);
 }

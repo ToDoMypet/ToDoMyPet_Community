@@ -6,6 +6,6 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostReqDTO {
+public class WritePostReqDTO {
     private String content;
 }

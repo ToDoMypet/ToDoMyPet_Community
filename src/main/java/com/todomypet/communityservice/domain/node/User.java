@@ -27,10 +27,10 @@ public class User {
     @Property("bio")
     private String bio;
 
-    @Property("profile_pic_url")
+    @Property("profilePicUrl")
     private String profilePicUrl;
 
-    @Property("oauth_key")
+    @Property("oauthKey")
     private String oauth_key;
 
 //    @Property("personal_code")
@@ -39,6 +39,6 @@ public class User {
     @Property("protected")
     private Boolean Protected;
 
-    @Property("refresh_token")
+    @Property("refreshToken")
     private String refreshToken;
 }

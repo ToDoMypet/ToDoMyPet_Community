@@ -2,11 +2,9 @@ package com.todomypet.communityservice.service;
 
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.User;
-import com.todomypet.communityservice.dto.PostReqDTO;
-import com.todomypet.communityservice.dto.PostUpdateReqDTO;
+import com.todomypet.communityservice.dto.*;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
-import com.todomypet.communityservice.repository.LikeRepository;
 import com.todomypet.communityservice.repository.PostRepository;
 import com.todomypet.communityservice.repository.UserRepository;
 import com.todomypet.communityservice.repository.WriteRepository;
@@ -20,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,13 +28,12 @@ public class BoardServiceImpl implements BoardService{
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final WriteRepository writeRepository;
-    private final LikeRepository likeRepository;
     private final S3Uploader s3Uploader;
 
     @Override
     @Transactional
-    public String post(String userId, PostReqDTO postReqDTO, List<MultipartFile> multipartFileList) {
-        if (postReqDTO.getContent() == null) {
+    public String post(String userId, WritePostReqDTO writePostReqDTO, List<MultipartFile> multipartFileList) {
+        if (writePostReqDTO.getContent() == null) {
             throw new CustomException(ErrorCode.POST_CONTENT_NULL);
         }
 
@@ -51,7 +49,7 @@ public class BoardServiceImpl implements BoardService{
         Post post = Post.builder()
                 .createdAt(LocalDateTime.parse(LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
-                .content(postReqDTO.getContent())
+                .content(writePostReqDTO.getContent())
                 .deleted(false)
                 .replyCount(0)
                 .likeCount(0)
@@ -97,5 +95,12 @@ public class BoardServiceImpl implements BoardService{
         }
 
         postRepository.updatePost(postId, postUpdateReqDTO.getContent(), imgList.toString());
+    }
+
+    @Override
+    public BoardListResDTO getMyPostList(String userId) {
+        List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId);
+        BoardListResDTO boardListResDTO = BoardListResDTO.builder().postList(getPostDTOList).build();
+        return boardListResDTO;
     }
 }
