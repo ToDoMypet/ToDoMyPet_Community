@@ -8,6 +8,8 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
+import java.time.LocalDateTime;
+
 @Node("User")
 @Getter
 public class User {
@@ -36,9 +38,25 @@ public class User {
 //    @Property("personal_code")
 //    private String personalCode;
 
+//    private Integer petCount;
+//    private Integer achCount;
+//    private Integer attendCount;
+//    private Integer petEvolveCount;
+//    private Integer petCompleteCount;
+//    private Integer attendContinueCount;
+
     @Property("protected")
     private Boolean Protected;
 
+    @Property("cratedAt")
+    private LocalDateTime createdAt;
+
+    @Property("deletedAt")
+    private LocalDateTime deletedAt;
+
     @Property("refreshToken")
     private String refreshToken;
+
+    @Property("deleted")
+    private Boolean deleted;
 }
