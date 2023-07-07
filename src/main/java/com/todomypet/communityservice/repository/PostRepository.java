@@ -15,19 +15,19 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
     @Query("MATCH (post:Post) WHERE post.id = $postId SET post.deleted = true")
     void deletePostById(String postId);
 
-    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.like_count = post.like_count + 1")
+    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.likeCount = post.likeCount + 1")
     void increaseLikeCountById(String postId);
 
-    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.like_count = post.like_count - 1")
+    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.likeCount = post.likeCount - 1")
     void decreaseLikeCountById(String postId);
 
-    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.reply_count = post.reply_count + 1")
+    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.replyCount = post.replyCount + 1")
     void increaseReplyCountById(String postId);
 
-    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.reply_count = post.reply_count - 1")
+    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.replyCount = post.replyCount - 1")
     void decreaseReplyCountById(String postId);
 
-    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.image_url = $imgUrl")
+    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.imageUrl = $imgUrl")
     void updatePost(String postId, String content, String imgUrl);
 
     @Query("MATCH (user:User)-[:WRITE]->(post:Post) " +

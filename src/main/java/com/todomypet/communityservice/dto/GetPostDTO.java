@@ -11,3 +11,4 @@ public class GetPostDTO {
     private PostInfoResDTO postInfo;
     private WriterResDTO writer;
 }
+
