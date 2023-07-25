@@ -35,15 +35,29 @@ public class User {
     @Property("oauthKey")
     private String oauth_key;
 
-//    @Property("personal_code")
-//    private String personalCode;
+    @Property("personalCode")
+    private String personalCode;
 
-//    private Integer petCount;
-//    private Integer achCount;
-//    private Integer attendCount;
-//    private Integer petEvolveCount;
-//    private Integer petCompleteCount;
-//    private Integer attendContinueCount;
+    @Property("petCount")
+    private Integer petCount;
+
+    @Property("achCount")
+    private Integer achCount;
+
+    @Property("attendCount")
+    private Integer attendCount;
+
+    @Property("petEvolveCount")
+    private Integer petEvolveCount;
+
+    @Property("petCompleteCount")
+    private Integer petCompleteCount;
+
+    @Property("attendContinueCount")
+    private Integer attendContinueCount;
+
+    @Property("friendCount")
+    private Integer friendCount;
 
     @Property("protected")
     private Boolean Protected;

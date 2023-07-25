@@ -8,13 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ReplyController {
 
     private final ReplyService replyService;
 
-    @PostMapping("/board/{postId}/reply")
+    @PostMapping("/{postId}/reply")
     public SuccessResDTO<PostReplyResDTO> postReply(@RequestHeader String userId,
                                                     @PathVariable String postId,
                                                     @RequestBody PostReplyReqDTO postReplyReqDTO) {
@@ -23,7 +22,7 @@ public class ReplyController {
         return new SuccessResDTO<>(response);
     }
 
-    @DeleteMapping("/board/{postId}/reply/{replyId}")
+    @DeleteMapping("/{postId}/reply/{replyId}")
     public SuccessResDTO<Void> deleteReply(@RequestHeader String userId,
                                            @PathVariable String postId,
                                            @PathVariable String replyId) {

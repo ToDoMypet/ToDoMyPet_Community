@@ -9,13 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping("/board")
+    @PostMapping("")
     public SuccessResDTO<WritePostResDTO> WritePost(@RequestHeader String userId,
                                                @RequestPart(value="postInfo") WritePostReqDTO writePostReqDTO,
                                                @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
@@ -24,13 +24,13 @@ public class BoardController {
         return new SuccessResDTO<WritePostResDTO>(writePostResDTO);
     }
 
-    @DeleteMapping("/board/{postId}")
+    @DeleteMapping("/{postId}")
     public SuccessResDTO<Void> deletePost(@RequestHeader String userId, @PathVariable String postId) {
         boardService.deletePost(userId, postId);
         return new SuccessResDTO<>(null);
     }
 
-    @PutMapping("/board/{postId}")
+    @PutMapping("/{postId}")
     public SuccessResDTO<PostUpdateResDTO> updatePost(@RequestHeader String userId, @PathVariable String postId,
                                                       @RequestPart(value = "postInfo") PostUpdateReqDTO postUpdateReqDTO,
                                                       @RequestPart(value = "imageUrls", required = false) List<MultipartFile> multipartFileList) {
@@ -39,7 +39,7 @@ public class BoardController {
         return new SuccessResDTO<PostUpdateResDTO>(response);
     }
 
-    @GetMapping("/board/my")
+    @GetMapping("/my-post-list")
     public SuccessResDTO<BoardListResDTO> getMyPostList(@RequestHeader String userId) {
         BoardListResDTO response = boardService.getMyPostList(userId);
         return new SuccessResDTO<BoardListResDTO>(response);
