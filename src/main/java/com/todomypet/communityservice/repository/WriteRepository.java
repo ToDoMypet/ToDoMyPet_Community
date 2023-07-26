@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WriteRepository extends Neo4jRepository<Write, Long> {
     @Query("MATCH (post:Post{id:$postId}) WITH post MATCH (user:User{id:$userId}) " +
-           "CREATE (post)<-[:WRITE]-(user)")
-    void setWriteRelationship(String userId, String postId);
+           "CREATE (post)<-[:WRITE{seq: $seq}]-(user)")
+    void setWriteRelationship(String userId, String postId, String seq);
 
     @Query("MATCH (reply:Reply{id:$replyId}) WITH reply MATCH (user:User{id:$userId}) CREATE (reply)<-[:WRITE]-(user)")
     void setWriteBetweenReplyAndUser(String userId, String replyId);

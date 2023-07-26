@@ -3,7 +3,7 @@ package com.todomypet.communityservice.service;
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
-import com.todomypet.communityservice.dto.PostReplyReqDTO;
+import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
 import com.todomypet.communityservice.repository.*;

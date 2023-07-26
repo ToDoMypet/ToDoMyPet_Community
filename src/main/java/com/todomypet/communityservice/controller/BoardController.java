@@ -1,6 +1,7 @@
 package com.todomypet.communityservice.controller;
 
 import com.todomypet.communityservice.dto.*;
+import com.todomypet.communityservice.dto.post.*;
 import com.todomypet.communityservice.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class BoardController {
 
     @PostMapping("")
     public SuccessResDTO<WritePostResDTO> WritePost(@RequestHeader String userId,
-                                               @RequestPart(value="postInfo") WritePostReqDTO writePostReqDTO,
-                                               @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
+                                                    @RequestPart(value="postInfo") WritePostReqDTO writePostReqDTO,
+                                                    @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
         String responseId = boardService.post(userId, writePostReqDTO, multipartFileList);
         WritePostResDTO writePostResDTO = WritePostResDTO.builder().id(responseId).build();
         return new SuccessResDTO<WritePostResDTO>(writePostResDTO);

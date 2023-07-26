@@ -11,6 +11,8 @@ public class Like {
     @RelationshipId
     private Long id;
 
+    private String seq;
+
     @TargetNode
     private User user;
 }

@@ -1,13 +1,14 @@
 package com.todomypet.communityservice.controller;
 
-import com.todomypet.communityservice.dto.PostReplyReqDTO;
-import com.todomypet.communityservice.dto.PostReplyResDTO;
+import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
+import com.todomypet.communityservice.dto.reply.PostReplyResDTO;
 import com.todomypet.communityservice.dto.SuccessResDTO;
 import com.todomypet.communityservice.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/board")
 @RequiredArgsConstructor
 public class ReplyController {
 

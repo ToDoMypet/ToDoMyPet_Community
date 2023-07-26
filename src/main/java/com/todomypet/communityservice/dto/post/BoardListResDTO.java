@@ -1,5 +1,7 @@
-package com.todomypet.communityservice.dto;
+package com.todomypet.communityservice.dto.post;
 
+import com.todomypet.communityservice.dto.PageDTO;
+import com.todomypet.communityservice.dto.post.GetPostDTO;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -1,10 +1,10 @@
-package com.todomypet.communityservice.dto;
+package com.todomypet.communityservice.dto.post;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
 @Getter
-public class PostReplyResDTO {
+public class WritePostResDTO {
     private String id;
 }

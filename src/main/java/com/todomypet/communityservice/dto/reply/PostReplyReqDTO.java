@@ -1,4 +1,4 @@
-package com.todomypet.communityservice.dto;
+package com.todomypet.communityservice.dto.reply;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUpdateReqDTO {
+public class PostReplyReqDTO {
     private String content;
 }

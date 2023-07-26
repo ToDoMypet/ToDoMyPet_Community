@@ -1,8 +1,12 @@
 package com.todomypet.communityservice.service;
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.User;
-import com.todomypet.communityservice.dto.*;
+import com.todomypet.communityservice.dto.post.BoardListResDTO;
+import com.todomypet.communityservice.dto.post.GetPostDTO;
+import com.todomypet.communityservice.dto.post.PostUpdateReqDTO;
+import com.todomypet.communityservice.dto.post.WritePostReqDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
 import com.todomypet.communityservice.repository.PostRepository;
@@ -18,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,7 +59,7 @@ public class BoardServiceImpl implements BoardService{
                 .imageUrl(imgList)
                 .build();
         String responseId = postRepository.save(post).getId();
-        writeRepository.setWriteRelationship(userId, responseId);
+        writeRepository.setWriteRelationship(userId, responseId, UlidCreator.getUlid().toString());
 
         return responseId;
     }

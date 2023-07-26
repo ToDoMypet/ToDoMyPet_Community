@@ -1,8 +1,8 @@
 package com.todomypet.communityservice.service;
 
-import com.todomypet.communityservice.dto.BoardListResDTO;
-import com.todomypet.communityservice.dto.WritePostReqDTO;
-import com.todomypet.communityservice.dto.PostUpdateReqDTO;
+import com.todomypet.communityservice.dto.post.BoardListResDTO;
+import com.todomypet.communityservice.dto.post.WritePostReqDTO;
+import com.todomypet.communityservice.dto.post.PostUpdateReqDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

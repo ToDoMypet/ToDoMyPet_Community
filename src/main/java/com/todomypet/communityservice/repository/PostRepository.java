@@ -1,7 +1,7 @@
 package com.todomypet.communityservice.repository;
 
 import com.todomypet.communityservice.domain.node.Post;
-import com.todomypet.communityservice.dto.GetPostDTO;
+import com.todomypet.communityservice.dto.post.GetPostDTO;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 

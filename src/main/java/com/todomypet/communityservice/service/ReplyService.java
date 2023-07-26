@@ -1,6 +1,6 @@
 package com.todomypet.communityservice.service;
 
-import com.todomypet.communityservice.dto.PostReplyReqDTO;
+import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
 
 public interface ReplyService {
     String postReply(String userId, String postId, PostReplyReqDTO postReplyReqDTO);
