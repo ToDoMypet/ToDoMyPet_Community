@@ -3,6 +3,7 @@ package com.todomypet.communityservice.controller;
 import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
 import com.todomypet.communityservice.dto.reply.PostReplyResDTO;
 import com.todomypet.communityservice.dto.SuccessResDTO;
+import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
 import com.todomypet.communityservice.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ReplyController {
                                                     @RequestBody PostReplyReqDTO postReplyReqDTO) {
         String responseId = replyService.postReply(userId, postId, postReplyReqDTO);
         PostReplyResDTO response = PostReplyResDTO.builder().id(responseId).build();
-        return new SuccessResDTO<>(response);
+        return new SuccessResDTO<PostReplyResDTO>(response);
     }
 
     @DeleteMapping("/{postId}/reply/{replyId}")
@@ -28,6 +29,15 @@ public class ReplyController {
                                            @PathVariable String postId,
                                            @PathVariable String replyId) {
         replyService.deleteReply(userId, postId, replyId);
-        return new SuccessResDTO<>(null);
+        return new SuccessResDTO<Void>(null);
+    }
+
+    @GetMapping("/{postId}/reply")
+    public SuccessResDTO<ReplyListResDTO> getReplyList(@RequestHeader String userId,
+                                                       @PathVariable String postId,
+                                                       @RequestParam(required = false) String nextIndex,
+                                                       @RequestParam(required = false, defaultValue = "20") int pageSize) {
+        ReplyListResDTO response = replyService.getReplyList(postId, nextIndex, pageSize);
+        return new SuccessResDTO<ReplyListResDTO>(response);
     }
 }

@@ -50,6 +50,7 @@ public class BoardServiceImpl implements BoardService{
         }
 
         Post post = Post.builder()
+                .id(UlidCreator.getUlid().toString())
                 .createdAt(LocalDateTime.parse(LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
                 .content(writePostReqDTO.getContent())

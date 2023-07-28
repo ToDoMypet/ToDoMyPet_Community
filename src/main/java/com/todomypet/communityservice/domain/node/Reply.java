@@ -1,11 +1,10 @@
 package com.todomypet.communityservice.domain.node;
 
+import com.todomypet.communityservice.domain.relationship.To;
+import com.todomypet.communityservice.domain.relationship.Write;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.*;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @Builder @Getter
 public class Reply {
     @Id
-    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String id;
 
     @Property("content")
@@ -25,4 +23,10 @@ public class Reply {
 
     @Property("deleted")
     private Boolean deleted;
+
+    @Relationship(type = "WRITE", direction = Relationship.Direction.INCOMING)
+    private User writer;
+
+    @Relationship(type = "TO", direction = Relationship.Direction.OUTGOING)
+    private To to;
 }

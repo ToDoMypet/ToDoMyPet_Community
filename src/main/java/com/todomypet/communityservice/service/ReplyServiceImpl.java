@@ -1,11 +1,16 @@
 package com.todomypet.communityservice.service;
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
+import com.todomypet.communityservice.dto.PageDTO;
 import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
+import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
+import com.todomypet.communityservice.dto.reply.ReplyResDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
+import com.todomypet.communityservice.mapper.ReplyMapper;
 import com.todomypet.communityservice.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,11 +30,13 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyRepository replyRepository;
     private final ToRepository toRepository;
     private final WriteRepository writeRepository;
+    private final ReplyMapper replyMapper;
 
     @Override
     @Transactional
     public String postReply(String userId, String postId, PostReplyReqDTO postReplyReqDTO) {
         Reply reply = Reply.builder()
+                .id(UlidCreator.getUlid().toString())
                 .content(postReplyReqDTO.getContent())
                 .createdAt(LocalDateTime.parse(LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
@@ -62,5 +71,23 @@ public class ReplyServiceImpl implements ReplyService {
         }
         replyRepository.deleteReplyById(replyId);
         postRepository.decreaseReplyCountById(postId);
+    }
+
+    @Override
+    public ReplyListResDTO getReplyList(String postId, String nextIndex, int pageSize) {
+        List<Reply> replyList = replyRepository.getReplyListByPostId(postId, nextIndex, pageSize);
+        ArrayList<ReplyResDTO> replyResDtoList = new ArrayList<>();
+        for (Reply r : replyList) {
+            replyResDtoList.add(replyMapper.replyToReplyResDTO(r));
+        }
+        PageDTO pageInfo;
+        if (replyResDtoList.size() > pageSize) {
+            pageInfo = PageDTO.builder().nextIndex(replyResDtoList.get(pageSize).getId()).hasNextPage(true).build();
+            replyResDtoList.remove(pageSize);
+        } else {
+            pageInfo = PageDTO.builder().nextIndex(null).hasNextPage(false).build();
+        }
+        ReplyListResDTO replyListResDTO = ReplyListResDTO.builder().replyList(replyResDtoList).pageInfo(pageInfo).build();
+        return replyListResDTO;
     }
 }

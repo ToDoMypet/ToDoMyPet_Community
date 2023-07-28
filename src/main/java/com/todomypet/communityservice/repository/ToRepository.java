@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ToRepository extends Neo4jRepository<To, Long> {
 
-    @Query("MATCH (reply:Reply) WITH reply MATCH (post:Post) WHERE reply.id = $replyId AND post.id = $postId CREATE (reply)-[:TO]->(post)")
+    @Query("MATCH (reply:Reply{id:$replyId}) WITH reply " +
+            "MATCH (post:Post{id:$postId}) " +
+            "CREATE (reply)-[:TO]->(post)")
     void setToBetweenPostAndReply(String postId, String replyId);
 
 }

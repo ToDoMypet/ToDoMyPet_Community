@@ -1,5 +1,7 @@
 package com.todomypet.communityservice.domain.node;
 
+import com.github.f4b6a3.ulid.UlidCreator;
+import com.github.f4b6a3.ulid.UlidFactory;
 import com.todomypet.communityservice.domain.relationship.Like;
 import com.todomypet.communityservice.domain.relationship.Write;
 import lombok.Builder;
@@ -16,7 +18,6 @@ import java.util.Set;
 @Getter
 public class Post {
     @Id
-    @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String id;
 
     @Property("content")

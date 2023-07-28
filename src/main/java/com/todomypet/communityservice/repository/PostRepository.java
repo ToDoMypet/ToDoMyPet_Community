@@ -32,6 +32,6 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
 
     @Query("MATCH (user:User)-[:WRITE]->(post:Post) " +
             "WHERE user.id = $userId " +
-            "RETURN user{.id} AS writer, post{.content, .createdAt, .imageUrl, .likeCount, .replyCount} AS postInfo")
+            "RETURN user{.profilePicUrl, .nickname} AS writer, post{.content, .createdAt, .imageUrl, .likeCount, .replyCount} AS postInfo")
     List<GetPostDTO> getPostListByUserId(String userId);
 }
