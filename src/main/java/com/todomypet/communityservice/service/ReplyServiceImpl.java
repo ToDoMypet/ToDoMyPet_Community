@@ -8,6 +8,7 @@ import com.todomypet.communityservice.dto.PageDTO;
 import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
 import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
 import com.todomypet.communityservice.dto.reply.ReplyResDTO;
+import com.todomypet.communityservice.dto.reply.ReplyUpdateReqDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
 import com.todomypet.communityservice.mapper.ReplyMapper;
@@ -67,7 +68,7 @@ public class ReplyServiceImpl implements ReplyService {
         User writer = userRepository.findWriterByReplyId(replyId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
         if (!writer.getId().equals(userId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TO_POST);
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
         replyRepository.deleteReplyById(replyId);
         postRepository.decreaseReplyCountById(postId);
@@ -89,5 +90,30 @@ public class ReplyServiceImpl implements ReplyService {
         }
         ReplyListResDTO replyListResDTO = ReplyListResDTO.builder().replyList(replyResDtoList).pageInfo(pageInfo).build();
         return replyListResDTO;
+    }
+
+    @Override
+    public void updateReply(String userId, String postId, String replyId, ReplyUpdateReqDTO updateInfo) {
+        Post post = postRepository.findPostById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
+        if (post.getDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_POST);
+        }
+        User user = userRepository.findUserById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+        Reply reply = replyRepository.findReplyById(replyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REPLY_NOT_EXISTS));
+        if (reply.getDeleted()) {
+            throw new CustomException(ErrorCode.DELETED_REPLY);
+        }
+        User writer = userRepository.findWriterByReplyId(replyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+        if (!writer.getId().equals(userId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        String content = updateInfo.getContent();
+        if (content == null || content.isEmpty()) {
+            throw new CustomException(ErrorCode.REPLY_CONTENT_NULL);
+        }
+        replyRepository.update(replyId, updateInfo.getContent());
     }
 }

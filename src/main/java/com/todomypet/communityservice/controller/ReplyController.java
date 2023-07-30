@@ -1,10 +1,9 @@
 package com.todomypet.communityservice.controller;
 
-import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
-import com.todomypet.communityservice.dto.reply.PostReplyResDTO;
+import com.todomypet.communityservice.dto.reply.*;
 import com.todomypet.communityservice.dto.SuccessResDTO;
-import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
 import com.todomypet.communityservice.service.ReplyService;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +38,15 @@ public class ReplyController {
                                                        @RequestParam(required = false, defaultValue = "20") int pageSize) {
         ReplyListResDTO response = replyService.getReplyList(postId, nextIndex, pageSize);
         return new SuccessResDTO<ReplyListResDTO>(response);
+    }
+
+    @PutMapping("/{postId}/reply/{replyId}")
+    public SuccessResDTO<ReplyUpdateResDTO> updateReply(@RequestHeader String userId,
+                                                        @PathVariable String postId,
+                                                        @PathVariable String replyId,
+                                                        @RequestBody ReplyUpdateReqDTO replyUpdateReqDTO) {
+        replyService.updateReply(userId, postId, replyId, replyUpdateReqDTO);
+        ReplyUpdateResDTO response = ReplyUpdateResDTO.builder().postId(postId).build();
+        return new SuccessResDTO<ReplyUpdateResDTO>(response);
     }
 }

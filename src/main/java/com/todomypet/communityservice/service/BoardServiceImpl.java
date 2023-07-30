@@ -74,7 +74,7 @@ public class BoardServiceImpl implements BoardService{
         User user = userRepository.findWriterByPostId(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
         if (!user.getId().equals(userId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TO_POST);
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
         postRepository.deletePostById(postId);
     }
@@ -88,7 +88,7 @@ public class BoardServiceImpl implements BoardService{
         User user = userRepository.findWriterByPostId(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
         if (!user.getId().equals(userId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS_TO_POST);
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
 
         List<String> imgList = new ArrayList<>();
