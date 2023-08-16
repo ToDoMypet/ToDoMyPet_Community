@@ -25,6 +25,14 @@ public class BoardController {
         return new SuccessResDTO<WritePostResDTO>(writePostResDTO);
     }
 
+    @GetMapping("")
+    public SuccessResDTO<BoardListResDTO> getFeed(@RequestHeader String userId,
+                                                  @RequestParam(required = false) String nextIndex,
+                                                  @RequestParam(required = false, defaultValue = "20") int pageSize) {
+        BoardListResDTO response = boardService.getFeed(userId, nextIndex, pageSize);
+        return new SuccessResDTO<BoardListResDTO>(response);
+    }
+
     @DeleteMapping("/{postId}")
     public SuccessResDTO<Void> deletePost(@RequestHeader String userId, @PathVariable String postId) {
         boardService.deletePost(userId, postId);

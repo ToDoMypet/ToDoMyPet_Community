@@ -14,4 +14,6 @@ public interface BoardService {
     void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO, List<MultipartFile> multipartFileList);
 
     BoardListResDTO getMyPostList(String userId);
+
+    BoardListResDTO getFeed(String userId, String nextIndex, int pageSize);
 }

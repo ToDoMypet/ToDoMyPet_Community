@@ -17,7 +17,8 @@ public interface ReplyRepository extends Neo4jRepository<Reply, String> {
     Optional<Reply> findReplyById(String replyId);
 
     @Query("MATCH (post:Post{id:$postId}) WITH post " +
-            "MATCH (reply:Reply)-[to:TO]->(post) WHERE $nextIndex <= reply.id WITH reply, to, post ORDER BY reply.id LIMIT $pageSize + 1 " +
+            "MATCH (reply:Reply)-[to:TO]->(post) WHERE $nextIndex <= reply.id " +
+            "WITH reply, to, post ORDER BY reply.id LIMIT $pageSize + 1 " +
             "MATCH (user:User)-[write:WRITE]->(reply) RETURN user, write, reply")
     List<Reply> getReplyListByPostId(String postId, String nextIndex, int pageSize);
 

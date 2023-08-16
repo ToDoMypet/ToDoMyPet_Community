@@ -2,11 +2,15 @@ package com.todomypet.communityservice.service;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 import com.todomypet.communityservice.domain.node.Post;
+import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
+import com.todomypet.communityservice.dto.PageDTO;
 import com.todomypet.communityservice.dto.post.BoardListResDTO;
 import com.todomypet.communityservice.dto.post.GetPostDTO;
 import com.todomypet.communityservice.dto.post.PostUpdateReqDTO;
 import com.todomypet.communityservice.dto.post.WritePostReqDTO;
+import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
+import com.todomypet.communityservice.dto.reply.ReplyResDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
 import com.todomypet.communityservice.repository.PostRepository;
@@ -106,5 +110,25 @@ public class BoardServiceImpl implements BoardService{
         List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId);
         BoardListResDTO boardListResDTO = BoardListResDTO.builder().postList(getPostDTOList).build();
         return boardListResDTO;
+    }
+
+    @Override
+    public BoardListResDTO getFeed(String userId, String nextIndex, int pageSize) {
+        if (nextIndex == null) {
+            nextIndex = UlidCreator.getUlid().toString();
+        }
+
+        List<GetPostDTO> getPostDTOList = postRepository.getFeedByUserId(userId, nextIndex, pageSize);
+
+        PageDTO pageInfo;
+        if (getPostDTOList.size() > pageSize) {
+            pageInfo = PageDTO.builder().nextIndex(getPostDTOList.get(pageSize).getPostInfo().getId()).hasNextPage(true).build();
+            getPostDTOList.remove(pageSize);
+        } else {
+            pageInfo = PageDTO.builder().nextIndex(null).hasNextPage(false).build();
+        }
+
+        BoardListResDTO feedListDTO = BoardListResDTO.builder().postList(getPostDTOList).pagingInfo(pageInfo).build();
+        return feedListDTO;
     }
 }

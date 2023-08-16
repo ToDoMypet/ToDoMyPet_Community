@@ -88,8 +88,7 @@ public class ReplyServiceImpl implements ReplyService {
         } else {
             pageInfo = PageDTO.builder().nextIndex(null).hasNextPage(false).build();
         }
-        ReplyListResDTO replyListResDTO = ReplyListResDTO.builder().replyList(replyResDtoList).pageInfo(pageInfo).build();
-        return replyListResDTO;
+        return ReplyListResDTO.builder().replyList(replyResDtoList).pageInfo(pageInfo).build();
     }
 
     @Override
