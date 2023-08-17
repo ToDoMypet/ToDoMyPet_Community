@@ -30,11 +30,12 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
     @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.imageUrl = $imgUrl")
     void updatePost(String postId, String content, String imgUrl);
 
-    @Query("MATCH (user:User)-[:WRITE]->(post:Post) " +
-            "WHERE user.id = $userId WITH user, post ORDER BY post.id " +
+    @Query("MATCH (user:User{id:$userId}) WITH user " +
+            "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id <= $nextIndex " +
+            "WITH user,post ORDER BY post.id DESC LIMIT $pageSize + 1 " +
             "RETURN user{.profilePicUrl, .nickname} AS writer, " +
-            "post{.content, .createdAt, .imageUrl, .likeCount, .replyCount} AS postInfo")
-    List<GetPostDTO> getPostListByUserId(String userId);
+            "post{.id, .content, .createdAt, .imageUrl, .likeCount, .replyCount} AS postInfo")
+    List<GetPostDTO> getPostListByUserId(String userId, String nextIndex, int pageSize);
 
     @Query("MATCH (user:User) WHERE user.id = $userId OR (:User{id:$userId})-[:FRIEND]-(user) WITH user " +
             "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id <= $nextIndex " +

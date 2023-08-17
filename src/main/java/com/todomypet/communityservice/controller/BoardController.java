@@ -49,8 +49,10 @@ public class BoardController {
     }
 
     @GetMapping("/my-post-list")
-    public SuccessResDTO<BoardListResDTO> getMyPostList(@RequestHeader String userId) {
-        BoardListResDTO response = boardService.getMyPostList(userId);
+    public SuccessResDTO<BoardListResDTO> getMyPostList(@RequestHeader String userId,
+                                                        @RequestParam(required = false) String nextIndex,
+                                                        @RequestParam(required = false, defaultValue = "20") int pageSize) {
+        BoardListResDTO response = boardService.getMyPostList(userId, nextIndex, pageSize);
         return new SuccessResDTO<BoardListResDTO>(response);
     }
 }

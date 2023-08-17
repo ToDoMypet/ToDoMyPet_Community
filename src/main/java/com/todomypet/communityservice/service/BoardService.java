@@ -13,7 +13,7 @@ public interface BoardService {
 
     void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO, List<MultipartFile> multipartFileList);
 
-    BoardListResDTO getMyPostList(String userId);
+    BoardListResDTO getMyPostList(String userId, String nextIndex, int pageSize);
 
     BoardListResDTO getFeed(String userId, String nextIndex, int pageSize);
 }

@@ -18,6 +18,7 @@ import com.todomypet.communityservice.repository.UserRepository;
 import com.todomypet.communityservice.repository.WriteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,18 @@ public class BoardServiceImpl implements BoardService{
     private final PostRepository postRepository;
     private final WriteRepository writeRepository;
     private final S3Uploader s3Uploader;
+
+    private PageDTO createPageDTO(int pageSize, List<GetPostDTO> postList) {
+        PageDTO pageInfo;
+        if (postList.size() > pageSize) {
+            pageInfo = PageDTO.builder().nextIndex(postList.get(pageSize).getPostInfo().getId())
+                    .hasNextPage(true).build();
+            postList.remove(pageSize);
+        } else {
+            pageInfo = PageDTO.builder().nextIndex(null).hasNextPage(false).build();
+        }
+        return pageInfo;
+    }
 
     @Override
     @Transactional
@@ -106,9 +119,16 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardListResDTO getMyPostList(String userId) {
-        List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId);
-        BoardListResDTO boardListResDTO = BoardListResDTO.builder().postList(getPostDTOList).build();
+    public BoardListResDTO getMyPostList(String userId, String nextIndex, int pageSize) {
+        if (nextIndex == null) {
+            nextIndex = UlidCreator.getUlid().toString();
+        }
+
+        List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId, nextIndex, pageSize);
+        PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
+
+        BoardListResDTO boardListResDTO = BoardListResDTO.builder()
+                .postList(getPostDTOList).pagingInfo(pageInfo).build();
         return boardListResDTO;
     }
 
@@ -119,14 +139,7 @@ public class BoardServiceImpl implements BoardService{
         }
 
         List<GetPostDTO> getPostDTOList = postRepository.getFeedByUserId(userId, nextIndex, pageSize);
-
-        PageDTO pageInfo;
-        if (getPostDTOList.size() > pageSize) {
-            pageInfo = PageDTO.builder().nextIndex(getPostDTOList.get(pageSize).getPostInfo().getId()).hasNextPage(true).build();
-            getPostDTOList.remove(pageSize);
-        } else {
-            pageInfo = PageDTO.builder().nextIndex(null).hasNextPage(false).build();
-        }
+        PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
 
         BoardListResDTO feedListDTO = BoardListResDTO.builder().postList(getPostDTOList).pagingInfo(pageInfo).build();
         return feedListDTO;
