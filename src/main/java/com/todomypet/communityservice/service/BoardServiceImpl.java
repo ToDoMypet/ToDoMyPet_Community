@@ -52,7 +52,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     @Transactional
-    public String post(String userId, WritePostReqDTO writePostReqDTO, List<MultipartFile> multipartFileList) {
+    public String post(String userId, WritePostReqDTO writePostReqDTO) {
         if (writePostReqDTO.getContent() == null) {
             throw new CustomException(ErrorCode.POST_CONTENT_NULL);
         }
@@ -60,9 +60,9 @@ public class BoardServiceImpl implements BoardService{
         User user = userRepository.findUserById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
 
         List<String> imgList = new ArrayList<>();
-        if (multipartFileList != null) {
-            for (MultipartFile multipartFile : multipartFileList) {
-                imgList.add(s3Uploader.upload(multipartFile));
+        if (!writePostReqDTO.getImageUrls().isEmpty()) {
+            for (String fileString : writePostReqDTO.getImageUrls()) {
+                imgList.add(s3Uploader.upload(fileString));
             }
         }
 
@@ -97,7 +97,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO, List<MultipartFile> multipartFileList) {
+    public void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
         if (post.getDeleted()) {
             throw new CustomException(ErrorCode.DELETED_POST);
@@ -109,9 +109,9 @@ public class BoardServiceImpl implements BoardService{
         }
 
         List<String> imgList = new ArrayList<>();
-        if (multipartFileList != null) {
-            for (MultipartFile multipartFile : multipartFileList) {
-                imgList.add(s3Uploader.upload(multipartFile));
+        if (!postUpdateReqDTO.getImageUrls().isEmpty()) {
+            for (String fileString : postUpdateReqDTO.getImageUrls()) {
+                imgList.add(s3Uploader.upload(fileString));
             }
         }
 

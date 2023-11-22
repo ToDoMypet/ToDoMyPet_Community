@@ -22,12 +22,13 @@ public class BoardController {
 
     private final BoardService boardService;
 
+
+    // todo: multipart 이미지 업로드 수정
     @Operation(summary = "글 작성", description = "글을 작성하여 발행합니다.")
     @PostMapping("")
     public SuccessResDTO<WritePostResDTO> WritePost(@Parameter(hidden = true) @RequestHeader String userId,
-                                                    @RequestPart(value="postInfo") WritePostReqDTO writePostReqDTO,
-                                                    @RequestPart(value="imageUrls", required = false) List<MultipartFile> multipartFileList) {
-        String responseId = boardService.post(userId, writePostReqDTO, multipartFileList);
+                                                    @RequestBody WritePostReqDTO writePostReqDTO) {
+        String responseId = boardService.post(userId, writePostReqDTO);
         WritePostResDTO writePostResDTO = WritePostResDTO.builder().id(responseId).build();
         return new SuccessResDTO<WritePostResDTO>(writePostResDTO);
     }
@@ -51,9 +52,8 @@ public class BoardController {
     @Operation(summary = "글 수정", description = "글을 수정합니다. 글 내용과 첨부 이미지를 수정할 수 있습니다.")
     @PutMapping("/{postId}")
     public SuccessResDTO<PostUpdateResDTO> updatePost(@Parameter(hidden = true) @RequestHeader String userId, @PathVariable String postId,
-                                                      @RequestPart(value = "postInfo") PostUpdateReqDTO postUpdateReqDTO,
-                                                      @RequestPart(value = "imageUrls", required = false) List<MultipartFile> multipartFileList) {
-        boardService.updatePost(userId, postId, postUpdateReqDTO, multipartFileList);
+                                                      @RequestBody PostUpdateReqDTO postUpdateReqDTO) {
+        boardService.updatePost(userId, postId, postUpdateReqDTO);
         PostUpdateResDTO response = PostUpdateResDTO.builder().id(postId).build();
         return new SuccessResDTO<PostUpdateResDTO>(response);
     }

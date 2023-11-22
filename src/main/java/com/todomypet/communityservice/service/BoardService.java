@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface BoardService {
-    String post(String userId, WritePostReqDTO writePostReqDTO, List<MultipartFile> multipartFileList);
+    String post(String userId, WritePostReqDTO writePostReqDTO);
     void deletePost(String userId, String postId);
 
-    void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO, List<MultipartFile> multipartFileList);
+    void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO);
 
     BoardListResDTO getMyPostList(String userId, String nextIndex, int pageSize);
 
