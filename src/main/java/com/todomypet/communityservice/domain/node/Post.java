@@ -38,6 +38,12 @@ public class Post {
     @Property("imageUrl")
     private List<String> imageUrl;
 
+    @Property("petId")
+    private String petId;
+
+    @Property("backgroundId")
+    private String backgroundId;
+
     @Relationship(type = "WRITE", direction = Relationship.Direction.INCOMING)
     private Write write;
 

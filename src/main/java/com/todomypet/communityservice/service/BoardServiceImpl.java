@@ -5,6 +5,7 @@ import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.PageDTO;
+import com.todomypet.communityservice.dto.pet.PetDetailResDTO;
 import com.todomypet.communityservice.dto.post.BoardListResDTO;
 import com.todomypet.communityservice.dto.post.GetPostDTO;
 import com.todomypet.communityservice.dto.post.PostUpdateReqDTO;
@@ -37,6 +38,7 @@ public class BoardServiceImpl implements BoardService{
     private final PostRepository postRepository;
     private final WriteRepository writeRepository;
     private final S3Uploader s3Uploader;
+    private final PetServiceClient petServiceClient;
 
     private PageDTO createPageDTO(int pageSize, List<GetPostDTO> postList) {
         PageDTO pageInfo;
@@ -75,6 +77,8 @@ public class BoardServiceImpl implements BoardService{
                 .replyCount(0)
                 .likeCount(0)
                 .imageUrl(imgList)
+                .petId(writePostReqDTO.getPetId())
+                .backgroundId(writePostReqDTO.getBackgroundId())
                 .build();
         String responseId = postRepository.save(post).getId();
         writeRepository.setWriteRelationship(userId, responseId, UlidCreator.getUlid().toString());
