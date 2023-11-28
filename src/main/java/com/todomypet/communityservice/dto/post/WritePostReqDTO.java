@@ -11,4 +11,6 @@ import java.util.List;
 public class WritePostReqDTO {
     private String content;
     private List<String> imageUrls;
+    private String petId;
+    private String backgroundId;
 }
