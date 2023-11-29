@@ -81,6 +81,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     @Transactional
     public String post(String userId, WritePostReqDTO writePostReqDTO) {
+        log.info(">>> 글 작성 API 진입: " + userId);
         if (writePostReqDTO.getContent() == null) {
             throw new CustomException(ErrorCode.POST_CONTENT_NULL);
         }
