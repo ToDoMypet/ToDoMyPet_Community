@@ -42,6 +42,30 @@ public class BoardServiceImpl implements BoardService{
 
     // todo: 서버간 통신에 대한 예외 처리 메소드 만들기
 
+    private PostResDTO getPostDTOToPostResDTO(String userId, GetPostDTO getPostDTO) {
+        PetDetailResDTO petDetailResDTO =
+                petServiceClient.getPetDetailInfo(getPostDTO.getWriter().getId(),
+                        getPostDTO.getPostInfo().getPetId()).getData();
+        GetPostInfoDTO postInfo = getPostDTO.getPostInfo();
+        String backgroundImageUrl = petServiceClient.getBackgroundUrlById(postInfo.getBackgroundId()).getData();
+        PostInfoResDTO postInfoResDTO = PostInfoResDTO.builder().id(postInfo.getId())
+                .content(postInfo.getContent())
+                .createdAt(postInfo.getCreatedAt())
+                .imageUrl(postInfo.getImageUrl())
+                .likeCount(postInfo.getLikeCount())
+                .replyCount(postInfo.getReplyCount())
+                .petName(petDetailResDTO.getName())
+                .petGrade(petDetailResDTO.getGrade())
+                .petImageUrl(petDetailResDTO.getPortraitUrl())
+                .backgroundImageUrl(backgroundImageUrl)
+                .isLiked(likeRepository.existsLikeByUserAndPost(userId, postInfo.getId())).build();
+        WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())
+                .profilePicUrl(getPostDTO.getWriter().getProfilePicUrl())
+                .isMyPost(writeRepository.existsWriteBetweenUserAndPost(userId, postInfo.getId())).build();
+
+        return PostResDTO.builder().postInfo(postInfoResDTO).writer(writerResDTO).build();
+    }
+
     private PageDTO createPageDTO(int pageSize, List<GetPostDTO> postList) {
         PageDTO pageInfo;
         if (postList.size() > pageSize) {
@@ -130,11 +154,15 @@ public class BoardServiceImpl implements BoardService{
             nextIndex = UlidCreator.getUlid().toString();
         }
 
+        List<PostResDTO> postResDTOList = new ArrayList<>();
         List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId, nextIndex, pageSize);
         PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
+        for (GetPostDTO getPostDTO : getPostDTOList) {
+            postResDTOList.add(getPostDTOToPostResDTO(userId, getPostDTO));
+        }
 
         BoardListResDTO boardListResDTO = BoardListResDTO.builder()
-                .postList(null).pagingInfo(pageInfo).build();
+                .postList(postResDTOList).pagingInfo(pageInfo).build();
         return boardListResDTO;
     }
 
@@ -147,25 +175,7 @@ public class BoardServiceImpl implements BoardService{
         List<PostResDTO> postResDTOList = new ArrayList<>();
         List<GetPostDTO> getPostDTOList = postRepository.getFeedByUserId(userId, nextIndex, pageSize);
         for (GetPostDTO getPostDTO : getPostDTOList) {
-            PetDetailResDTO petDetailResDTO =
-                    petServiceClient.getPetDetailInfo(getPostDTO.getWriter().getId(), getPostDTO.getPostInfo().getPetId()).getData();
-            GetPostInfoDTO postInfo = getPostDTO.getPostInfo();
-            String backgroundImageUrl = petServiceClient.getBackgroundUrlById(postInfo.getBackgroundId()).getData();
-            PostInfoResDTO postInfoResDTO = PostInfoResDTO.builder().id(postInfo.getId())
-                    .content(postInfo.getContent())
-                    .createdAt(postInfo.getCreatedAt())
-                    .imageUrl(postInfo.getImageUrl())
-                    .likeCount(postInfo.getLikeCount())
-                    .replyCount(postInfo.getReplyCount())
-                    .petName(petDetailResDTO.getName())
-                    .petGrade(petDetailResDTO.getGrade())
-                    .petImageUrl(petDetailResDTO.getPortraitUrl())
-                    .backgroundImageUrl(backgroundImageUrl)
-                    .isLiked(likeRepository.existsLikeByUserAndPost(userId, postInfo.getId())).build();
-            WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())
-                    .profilePicUrl(getPostDTO.getWriter().getProfilePicUrl())
-                    .isMyPost(writeRepository.existsWriteBetweenUserAndPost(userId, postInfo.getId())).build();
-            postResDTOList.add(PostResDTO.builder().postInfo(postInfoResDTO).writer(writerResDTO).build());
+            postResDTOList.add(getPostDTOToPostResDTO(userId, getPostDTO));
         }
 
 
