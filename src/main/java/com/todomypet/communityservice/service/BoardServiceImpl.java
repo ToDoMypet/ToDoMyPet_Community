@@ -150,6 +150,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardListResDTO getMyPostList(String userId, String nextIndex, int pageSize) {
+        log.info(">>> 내가 쓴 글 조회 API 진입: " + userId);
         if (nextIndex == null) {
             nextIndex = UlidCreator.getUlid().toString();
         }
@@ -168,6 +169,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardListResDTO getFeed(String userId, String nextIndex, int pageSize) {
+        log.info(">>> 피드 조회 API 진입: " + userId);
         if (nextIndex == null) {
             nextIndex = UlidCreator.getUlid().toString();
         }
