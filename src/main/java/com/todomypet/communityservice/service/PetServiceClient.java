@@ -1,6 +1,7 @@
 package com.todomypet.communityservice.service;
 
 import com.todomypet.communityservice.dto.pet.PetDetailResDTO;
+import com.todomypet.communityservice.dto.post.FeignClientResDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,5 +11,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface PetServiceClient {
 
     @GetMapping(value = "/adopted-pet-list/my-pet-info/detail/{seq}", consumes = "application/json")
-    PetDetailResDTO getPetDetailInfo(@RequestHeader String userId, @PathVariable String seq);
+    FeignClientResDTO<PetDetailResDTO> getPetDetailInfo(@RequestHeader String userId, @PathVariable String seq);
+
+    @GetMapping(value = "/background/{backgroundId}")
+    FeignClientResDTO<String> getBackgroundUrlById(@PathVariable String backgroundId);
 }

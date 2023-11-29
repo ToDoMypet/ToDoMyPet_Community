@@ -6,14 +6,13 @@ import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.PageDTO;
 import com.todomypet.communityservice.dto.pet.PetDetailResDTO;
-import com.todomypet.communityservice.dto.post.BoardListResDTO;
-import com.todomypet.communityservice.dto.post.GetPostDTO;
-import com.todomypet.communityservice.dto.post.PostUpdateReqDTO;
-import com.todomypet.communityservice.dto.post.WritePostReqDTO;
+import com.todomypet.communityservice.dto.post.*;
 import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
 import com.todomypet.communityservice.dto.reply.ReplyResDTO;
+import com.todomypet.communityservice.dto.user.WriterResDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
+import com.todomypet.communityservice.repository.LikeRepository;
 import com.todomypet.communityservice.repository.PostRepository;
 import com.todomypet.communityservice.repository.UserRepository;
 import com.todomypet.communityservice.repository.WriteRepository;
@@ -37,8 +36,11 @@ public class BoardServiceImpl implements BoardService{
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final WriteRepository writeRepository;
+    private final LikeRepository likeRepository;
     private final S3Uploader s3Uploader;
     private final PetServiceClient petServiceClient;
+
+    // todo: 서버간 통신에 대한 예외 처리 메소드 만들기
 
     private PageDTO createPageDTO(int pageSize, List<GetPostDTO> postList) {
         PageDTO pageInfo;
@@ -132,7 +134,7 @@ public class BoardServiceImpl implements BoardService{
         PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
 
         BoardListResDTO boardListResDTO = BoardListResDTO.builder()
-                .postList(getPostDTOList).pagingInfo(pageInfo).build();
+                .postList(null).pagingInfo(pageInfo).build();
         return boardListResDTO;
     }
 
@@ -142,10 +144,34 @@ public class BoardServiceImpl implements BoardService{
             nextIndex = UlidCreator.getUlid().toString();
         }
 
+        List<PostResDTO> postResDTOList = new ArrayList<>();
         List<GetPostDTO> getPostDTOList = postRepository.getFeedByUserId(userId, nextIndex, pageSize);
+        for (GetPostDTO getPostDTO : getPostDTOList) {
+            PetDetailResDTO petDetailResDTO =
+                    petServiceClient.getPetDetailInfo(getPostDTO.getWriter().getId(), getPostDTO.getPostInfo().getPetId()).getData();
+            GetPostInfoDTO postInfo = getPostDTO.getPostInfo();
+            String backgroundImageUrl = petServiceClient.getBackgroundUrlById(postInfo.getBackgroundId()).getData();
+            PostInfoResDTO postInfoResDTO = PostInfoResDTO.builder().id(postInfo.getId())
+                    .content(postInfo.getContent())
+                    .createdAt(postInfo.getCreatedAt())
+                    .imageUrl(postInfo.getImageUrl())
+                    .likeCount(postInfo.getLikeCount())
+                    .replyCount(postInfo.getReplyCount())
+                    .petName(petDetailResDTO.getName())
+                    .petGrade(petDetailResDTO.getGrade())
+                    .petImageUrl(petDetailResDTO.getPortraitUrl())
+                    .backgroundImageUrl(backgroundImageUrl)
+                    .isLiked(likeRepository.existsLikeByUserAndPost(userId, postInfo.getId())).build();
+            WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())
+                    .profilePicUrl(getPostDTO.getWriter().getProfilePicUrl())
+                    .isMyPost(writeRepository.existsWriteBetweenUserAndPost(userId, postInfo.getId())).build();
+            postResDTOList.add(PostResDTO.builder().postInfo(postInfoResDTO).writer(writerResDTO).build());
+        }
+
+
         PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
 
-        BoardListResDTO feedListDTO = BoardListResDTO.builder().postList(getPostDTOList).pagingInfo(pageInfo).build();
+        BoardListResDTO feedListDTO = BoardListResDTO.builder().postList(postResDTOList).pagingInfo(pageInfo).build();
         return feedListDTO;
     }
 }

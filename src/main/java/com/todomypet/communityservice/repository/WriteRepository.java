@@ -13,4 +13,7 @@ public interface WriteRepository extends Neo4jRepository<Write, Long> {
 
     @Query("MATCH (reply:Reply{id:$replyId}) WITH reply MATCH (user:User{id:$userId}) CREATE (reply)<-[:WRITE]-(user)")
     void setWriteBetweenReplyAndUser(String userId, String replyId);
+
+    @Query("MATCH (u:User{id:$userId}) WITH u MATCH (p:Post{id:$postId}) RETURN exists((u)-[:WRITE]->(p))")
+    boolean existsWriteBetweenUserAndPost(String userId, String postId);
 }

@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class WriterResDTO {
+public class GetWriterDTO {
+    private String id;
     private String profilePicUrl;
     private String nickname;
-    private boolean isMyPost;
 }

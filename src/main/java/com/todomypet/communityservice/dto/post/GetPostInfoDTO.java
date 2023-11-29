@@ -8,16 +8,13 @@ import java.util.List;
 
 @Builder
 @Getter
-public class PostInfoResDTO {
+public class GetPostInfoDTO {
     private String id;
     private String content;
     private LocalDateTime createdAt;
     private List<String> imageUrl;
     private Integer likeCount;
     private Integer replyCount;
-    private String petName;
-    private String petGrade;
-    private String petImageUrl;
-    private String backgroundImageUrl;
-    private boolean isLiked;
+    private String petId;
+    private String backgroundId;
 }

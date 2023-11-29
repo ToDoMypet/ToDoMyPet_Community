@@ -10,6 +10,6 @@ import java.util.List;
 @Builder
 @Getter
 public class BoardListResDTO {
-    private List<GetPostDTO> postList;
+    private List<PostResDTO> postList;
     private PageDTO pagingInfo;
 }

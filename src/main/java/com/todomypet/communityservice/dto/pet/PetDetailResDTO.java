@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
+@AllArgsConstructor
 public class PetDetailResDTO {
     private String grade;
     private String name;
