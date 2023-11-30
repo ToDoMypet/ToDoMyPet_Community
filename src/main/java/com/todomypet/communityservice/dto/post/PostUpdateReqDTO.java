@@ -14,4 +14,6 @@ import java.util.List;
 public class PostUpdateReqDTO {
     private String content;
     private List<String> imageUrls;
+    private String petId;
+    private String backgroundId;
 }

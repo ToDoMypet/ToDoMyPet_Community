@@ -47,7 +47,7 @@ public class BoardController {
         return new SuccessResDTO<>(null);
     }
 
-    @Operation(summary = "글 수정", description = "글을 수정합니다. 글 내용과 첨부 이미지를 수정할 수 있습니다.")
+    @Operation(summary = "글 수정", description = "글을 수정합니다. 글 내용과 첨부 이미지, 펫과 펫룸 이미지를 수정할 수 있습니다.")
     @PutMapping("/{postId}")
     public SuccessResDTO<PostUpdateResDTO> updatePost(@RequestHeader String userId, @PathVariable String postId,
                                                       @RequestBody PostUpdateReqDTO postUpdateReqDTO) {

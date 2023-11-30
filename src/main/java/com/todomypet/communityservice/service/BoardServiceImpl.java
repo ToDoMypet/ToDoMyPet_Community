@@ -41,6 +41,7 @@ public class BoardServiceImpl implements BoardService{
     private final PetServiceClient petServiceClient;
 
     // todo: 서버간 통신에 대한 예외 처리 메소드 만들기
+    // todo: ADOPT 관계가 없는 펫에 대한 예외 처리 필요
 
     private PostResDTO getPostDTOToPostResDTO(String userId, GetPostDTO getPostDTO) {
         PetDetailResDTO petDetailResDTO =
@@ -129,6 +130,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO) {
+        log.info(">>> 글 수정 API 진입: " + userId);
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
         if (post.getDeleted()) {
             throw new CustomException(ErrorCode.DELETED_POST);
@@ -136,6 +138,7 @@ public class BoardServiceImpl implements BoardService{
         User user = userRepository.findWriterByPostId(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
         if (!user.getId().equals(userId)) {
+            log.error(">>> 수정 userId 불일치 (진입 Id)" + userId + " (글 작성 Id)" + user.getId());
             throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
 
@@ -146,7 +149,8 @@ public class BoardServiceImpl implements BoardService{
             }
         }
 
-        postRepository.updatePost(postId, postUpdateReqDTO.getContent(), imgList.toString());
+        postRepository.updatePost(postId, postUpdateReqDTO.getContent(), imgList.toString(),
+                postUpdateReqDTO.getPetId(), postUpdateReqDTO.getBackgroundId());
     }
 
     @Override

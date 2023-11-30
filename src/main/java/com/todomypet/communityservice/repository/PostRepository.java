@@ -27,8 +27,9 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
     @Query("MATCH (post:Post) WHERE post.id = $postId SET post.replyCount = post.replyCount - 1")
     void decreaseReplyCountById(String postId);
 
-    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.imageUrl = $imgUrl")
-    void updatePost(String postId, String content, String imgUrl);
+    @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.imageUrl = $imgUrl, " +
+            "post.petId = $petId, post.backgroundId = $backgroundId")
+    void updatePost(String postId, String content, String imgUrl, String petId, String backgroundId);
 
     @Query("MATCH (user:User{id:$userId}) WITH user " +
             "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id <= $nextIndex " +
