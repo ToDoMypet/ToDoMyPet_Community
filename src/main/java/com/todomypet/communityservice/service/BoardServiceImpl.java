@@ -191,4 +191,11 @@ public class BoardServiceImpl implements BoardService{
         BoardListResDTO feedListDTO = BoardListResDTO.builder().postList(postResDTOList).pagingInfo(pageInfo).build();
         return feedListDTO;
     }
+
+    @Override
+    public PostResDTO getPostDetailById(String userId, String postId) {
+        GetPostDTO getPostDTO = postRepository.getPostById(postId);
+        PostResDTO postResDTO = getPostDTOToPostResDTO(userId, getPostDTO);
+        return postResDTO;
+    }
 }
