@@ -5,15 +5,13 @@ import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.PageDTO;
-import com.todomypet.communityservice.dto.reply.PostReplyReqDTO;
-import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
-import com.todomypet.communityservice.dto.reply.ReplyResDTO;
-import com.todomypet.communityservice.dto.reply.ReplyUpdateReqDTO;
+import com.todomypet.communityservice.dto.reply.*;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
 import com.todomypet.communityservice.mapper.ReplyMapper;
 import com.todomypet.communityservice.repository.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +22,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ReplyServiceImpl implements ReplyService {
 
     private final PostRepository postRepository;
@@ -32,10 +31,14 @@ public class ReplyServiceImpl implements ReplyService {
     private final ToRepository toRepository;
     private final WriteRepository writeRepository;
     private final ReplyMapper replyMapper;
+    private final NotificationServiceClient notificationServiceClient;
 
     @Override
     @Transactional
     public String postReply(String userId, String postId, PostReplyReqDTO postReplyReqDTO) {
+        User sender = userRepository.findUserById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+
         Reply reply = Reply.builder()
                 .id(UlidCreator.getUlid().toString())
                 .content(postReplyReqDTO.getContent())
@@ -45,9 +48,22 @@ public class ReplyServiceImpl implements ReplyService {
                 .build();
         String responseId = replyRepository.save(reply).getId();
 
+
         toRepository.setToBetweenPostAndReply(postId, responseId);
         writeRepository.setWriteBetweenReplyAndUser(userId, responseId);
         postRepository.increaseReplyCountById(postId);
+
+        try {
+            User writer = userRepository.findWriterByPostId(postId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+
+            notificationServiceClient.sendReplyNotification(SendReplyNotificationReqDTO.builder()
+                    .userId(writer.getId()).type("REPLY")
+                    .senderProfilePicUrl(sender.getProfilePicUrl()).senderName(sender.getNickname())
+                    .notificationDataId(postId).notificationContent(reply.getContent()).build());
+        } catch (Exception e) {
+            log.error(">>> 알림 발송 실패: " + userId);
+        }
 
         return responseId;
     }
