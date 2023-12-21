@@ -13,6 +13,6 @@ public interface PetServiceClient {
     @GetMapping(value = "/pet/adopted-pet-list/my-pet-info/detail/{seq}", consumes = "application/json")
     FeignClientResDTO<PetDetailResDTO> getPetDetailInfo(@RequestHeader String userId, @PathVariable String seq);
 
-    @GetMapping(value = "/pet/background/{backgroundId}")
+    @GetMapping(value = "/background/{backgroundId}")
     FeignClientResDTO<String> getBackgroundUrlById(@PathVariable String backgroundId);
 }
