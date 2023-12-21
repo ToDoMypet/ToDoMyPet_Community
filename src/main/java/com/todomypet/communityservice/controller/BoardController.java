@@ -40,6 +40,13 @@ public class BoardController {
         return new SuccessResDTO<BoardListResDTO>(response);
     }
 
+    @Operation(summary = "글 자세히 보기", description = "특정 글 을 조회합니다.")
+    @GetMapping("/{postId}")
+    public SuccessResDTO<PostResDTO> getPostDetail(@RequestHeader String userId, @PathVariable String postId) {
+        PostResDTO response = boardService.getPostDetailById(userId, postId);
+        return new SuccessResDTO<PostResDTO>(response);
+    }
+
     @Operation(summary = "글 삭제", description = "특정 글을 삭제합니다.")
     @DeleteMapping("/{postId}")
     public SuccessResDTO<Void> deletePost(@RequestHeader String userId, @PathVariable String postId) {
