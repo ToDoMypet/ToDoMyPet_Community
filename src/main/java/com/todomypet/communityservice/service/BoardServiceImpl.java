@@ -57,7 +57,7 @@ public class BoardServiceImpl implements BoardService{
                 .replyCount(postInfo.getReplyCount())
                 .petName(petDetailResDTO.getName())
                 .petGrade(petDetailResDTO.getGrade())
-                .petImageUrl(petDetailResDTO.getPortraitUrl())
+                .petImageUrl(petDetailResDTO.getImageUrl())
                 .backgroundImageUrl(backgroundImageUrl)
                 .isLiked(likeRepository.existsLikeByUserAndPost(userId, postInfo.getId())).build();
         WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())
