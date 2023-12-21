@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name="pet-service", url = "${feign.pet.url}")
 public interface PetServiceClient {
 
-    @GetMapping(value = "/adopted-pet-list/my-pet-info/detail/{seq}", consumes = "application/json")
+    @GetMapping(value = "/pet/adopted-pet-list/my-pet-info/detail/{seq}", consumes = "application/json")
     FeignClientResDTO<PetDetailResDTO> getPetDetailInfo(@RequestHeader String userId, @PathVariable String seq);
 
-    @GetMapping(value = "/background/{backgroundId}")
+    @GetMapping(value = "/pet/background/{backgroundId}")
     FeignClientResDTO<String> getBackgroundUrlById(@PathVariable String backgroundId);
 }
