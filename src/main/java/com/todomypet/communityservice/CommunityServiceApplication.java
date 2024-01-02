@@ -13,7 +13,7 @@ public class CommunityServiceApplication {
 
     @PostConstruct
     void started() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone("KST"));
     }
 
     public static void main(String[] args) {
