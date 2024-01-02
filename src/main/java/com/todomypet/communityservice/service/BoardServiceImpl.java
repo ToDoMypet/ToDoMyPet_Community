@@ -152,7 +152,7 @@ public class BoardServiceImpl implements BoardService{
             }
         }
 
-        postRepository.updatePost(postId, postUpdateReqDTO.getContent(), imgList.toString(),
+        postRepository.updatePost(postId, postUpdateReqDTO.getContent(), imgList,
                 postUpdateReqDTO.getPetId(), postUpdateReqDTO.getBackgroundId());
     }
 

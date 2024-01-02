@@ -29,7 +29,7 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
 
     @Query("MATCH (post:Post) WHERE post.id = $postId SET post.content = $content, post.imageUrl = $imgUrl, " +
             "post.petId = $petId, post.backgroundId = $backgroundId")
-    void updatePost(String postId, String content, String imgUrl, String petId, String backgroundId);
+    void updatePost(String postId, String content, List<String> imgUrl, String petId, String backgroundId);
 
     @Query("MATCH (user:User{id:$userId}) WITH user " +
             "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id <= $nextIndex AND post.deleted = false " +
