@@ -10,12 +10,6 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EnableFeignClients
 public class CommunityServiceApplication {
-
-    @PostConstruct
-    void started() {
-        TimeZone.setDefault(TimeZone.getTimeZone("KST"));
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(CommunityServiceApplication.class, args);
     }
