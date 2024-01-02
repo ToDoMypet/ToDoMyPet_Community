@@ -26,6 +26,9 @@ public class S3Uploader {
     private String bucket;
 
     public String upload(String fileString) {
+
+        if (fileString.startsWith("http")) return fileString;
+
         byte[] data = Base64.getDecoder().decode(fileString);
 
         String fileName = UUID.randomUUID().toString();
