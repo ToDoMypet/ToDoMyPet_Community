@@ -44,6 +44,7 @@ public class BoardServiceImpl implements BoardService{
     // todo: ADOPT 관계가 없는 펫에 대한 예외 처리 필요
 
     private PostResDTO getPostDTOToPostResDTO(String userId, GetPostDTO getPostDTO) {
+
         PetDetailResDTO petDetailResDTO =
                 petServiceClient.getPetDetailInfo(getPostDTO.getWriter().getId(),
                         getPostDTO.getPostInfo().getPetId()).getData();
@@ -55,9 +56,11 @@ public class BoardServiceImpl implements BoardService{
                 .imageUrl(postInfo.getImageUrl())
                 .likeCount(postInfo.getLikeCount())
                 .replyCount(postInfo.getReplyCount())
+                .petId(getPostDTO.getPostInfo().getPetId())
                 .petName(petDetailResDTO.getName())
                 .petGrade(petDetailResDTO.getGrade())
-                .petImageUrl(petDetailResDTO.getPortraitUrl())
+                .petImageUrl(petDetailResDTO.getImageUrl())
+                .backgroundId(getPostDTO.getPostInfo().getBackgroundId())
                 .backgroundImageUrl(backgroundImageUrl)
                 .isLiked(likeRepository.existsLikeByUserAndPost(userId, postInfo.getId())).build();
         WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())

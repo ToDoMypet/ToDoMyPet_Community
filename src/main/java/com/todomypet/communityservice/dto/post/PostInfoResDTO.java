@@ -15,9 +15,11 @@ public class PostInfoResDTO {
     private List<String> imageUrl;
     private Integer likeCount;
     private Integer replyCount;
+    private String petId;
     private String petName;
     private String petGrade;
     private String petImageUrl;
+    private String backgroundId;
     private String backgroundImageUrl;
     private boolean isLiked;
 }

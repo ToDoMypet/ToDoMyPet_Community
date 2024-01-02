@@ -40,7 +40,7 @@ public class BoardController {
         return new SuccessResDTO<BoardListResDTO>(response);
     }
 
-    @Operation(summary = "글 자세히 보기", description = "특정 글 을 조회합니다.")
+    @Operation(summary = "글 자세히 보기", description = "특정 글을 조회합니다.")
     @GetMapping("/{postId}")
     public SuccessResDTO<PostResDTO> getPostDetail(@RequestHeader String userId, @PathVariable String postId) {
         PostResDTO response = boardService.getPostDetailById(userId, postId);

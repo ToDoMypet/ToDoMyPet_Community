@@ -12,7 +12,7 @@ public class PetDetailResDTO {
     private String grade;
     private String name;
     private String description;
-    private String portraitUrl;
+    private String imageUrl;
     private String type;
     private String personality;
 }
