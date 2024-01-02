@@ -182,12 +182,13 @@ public class BoardServiceImpl implements BoardService{
             nextIndex = UlidCreator.getUlid().toString();
         }
 
+        log.info(nextIndex);
+
         List<PostResDTO> postResDTOList = new ArrayList<>();
         List<GetPostDTO> getPostDTOList = postRepository.getFeedByUserId(userId, nextIndex, pageSize);
         for (GetPostDTO getPostDTO : getPostDTOList) {
             postResDTOList.add(getPostDTOToPostResDTO(userId, getPostDTO));
         }
-
 
         PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
 

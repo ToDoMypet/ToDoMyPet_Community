@@ -39,7 +39,7 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
     List<GetPostDTO> getPostListByUserId(String userId, String nextIndex, int pageSize);
 
     @Query("MATCH (user:User) WHERE user.id = $userId OR (:User{id:$userId})-[:FRIEND]-(user) WITH user " +
-            "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id <= $nextIndex AND post.deleted = false " +
+            "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id >= $nextIndex AND post.deleted = false " +
             "WITH user, post ORDER BY post.id DESC LIMIT $pageSize + 1 " +
             "RETURN user{.id, .profilePicUrl, .nickname} AS writer, " +
             "post{.id, .content, .createdAt, .imageUrl, .likeCount, .replyCount, .petId, .backgroundId} AS postInfo")
