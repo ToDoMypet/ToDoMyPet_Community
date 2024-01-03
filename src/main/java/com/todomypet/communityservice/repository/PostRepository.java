@@ -32,7 +32,7 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
     void updatePost(String postId, String content, List<String> imgUrl, String petId, String backgroundId);
 
     @Query("MATCH (user:User{id:$userId}) WITH user " +
-            "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id <= $nextIndex AND post.deleted = false " +
+            "MATCH (user)-[:WRITE]->(post:Post) WHERE post.id >= $nextIndex AND post.deleted = false " +
             "WITH user,post ORDER BY post.id DESC LIMIT $pageSize + 1 " +
             "RETURN user{.id, .profilePicUrl, .nickname} AS writer, " +
             "post{.id, .content, .createdAt, .imageUrl, .likeCount, .replyCount, .petId, .backgroundId} AS postInfo")
