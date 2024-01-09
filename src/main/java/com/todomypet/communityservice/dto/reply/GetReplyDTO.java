@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ReplyResDTO {
+public class GetReplyDTO {
     private GetReplyInfoDTO replyInfo;
     private WriterResDTO writer;
 }

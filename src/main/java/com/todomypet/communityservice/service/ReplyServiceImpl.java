@@ -6,9 +6,9 @@ import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.PageDTO;
 import com.todomypet.communityservice.dto.reply.*;
+import com.todomypet.communityservice.dto.user.WriterResDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
-import com.todomypet.communityservice.mapper.ReplyMapper;
 import com.todomypet.communityservice.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,6 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyRepository replyRepository;
     private final ToRepository toRepository;
     private final WriteRepository writeRepository;
-    private final ReplyMapper replyMapper;
     private final NotificationServiceClient notificationServiceClient;
 
     @Override
@@ -91,15 +90,23 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public ReplyListResDTO getReplyList(String postId, String nextIndex, int pageSize) {
+    public ReplyListResDTO getReplyList(String userId, String postId, String nextIndex, int pageSize) {
+        if (nextIndex == null) {
+            nextIndex = UlidCreator.getUlid().toString();
+        }
         List<Reply> replyList = replyRepository.getReplyListByPostId(postId, nextIndex, pageSize);
         ArrayList<ReplyResDTO> replyResDtoList = new ArrayList<>();
         for (Reply r : replyList) {
-            replyResDtoList.add(replyMapper.replyToReplyResDTO(r));
+            User writer = r.getWriter();
+            replyResDtoList.add(ReplyResDTO.builder().replyInfo(GetReplyInfoDTO.builder().id(r.getId())
+                            .createdAt(r.getCreatedAt()).content(r.getContent()).build())
+                    .writer(WriterResDTO.builder().nickname(writer.getNickname())
+                            .profilePicUrl(writer.getProfilePicUrl())
+                            .isMyPost(writeRepository.existsWriteBetweenUserAndReply(userId, r.getId())).build()).build());
         }
         PageDTO pageInfo;
         if (replyResDtoList.size() > pageSize) {
-            pageInfo = PageDTO.builder().nextIndex(replyResDtoList.get(pageSize).getId()).hasNextPage(true).build();
+            pageInfo = PageDTO.builder().nextIndex(replyResDtoList.get(pageSize).getReplyInfo().getId()).hasNextPage(true).build();
             replyResDtoList.remove(pageSize);
         } else {
             pageInfo = PageDTO.builder().nextIndex(null).hasNextPage(false).build();

@@ -44,7 +44,7 @@ public class ReplyController {
                                                        @PathVariable String postId,
                                                        @RequestParam(required = false) String nextIndex,
                                                        @RequestParam(required = false, defaultValue = "20") int pageSize) {
-        ReplyListResDTO response = replyService.getReplyList(postId, nextIndex, pageSize);
+        ReplyListResDTO response = replyService.getReplyList(userId, postId, nextIndex, pageSize);
         return new SuccessResDTO<ReplyListResDTO>(response);
     }
 
