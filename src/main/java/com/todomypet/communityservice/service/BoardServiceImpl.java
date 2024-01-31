@@ -118,8 +118,9 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    @Transactional
     public void deletePost(String userId, String postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
+        Post post = postRepository.findPostById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
         if (post.getDeleted()) {
             throw new CustomException(ErrorCode.DELETED_POST);
         }
