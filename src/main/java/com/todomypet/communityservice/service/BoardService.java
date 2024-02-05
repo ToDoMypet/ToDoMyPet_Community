@@ -19,4 +19,6 @@ public interface BoardService {
     BoardListResDTO getFeed(String userId, String nextIndex, int pageSize);
 
     PostResDTO getPostDetailById(String userId, String postId);
+
+    void reportPost(String userId, String postId);
 }

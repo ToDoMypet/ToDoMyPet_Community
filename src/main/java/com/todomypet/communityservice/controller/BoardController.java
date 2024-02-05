@@ -1,17 +1,13 @@
 package com.todomypet.communityservice.controller;
 
-import com.todomypet.communityservice.dto.*;
+import com.todomypet.communityservice.dto.ect.SuccessResDTO;
 import com.todomypet.communityservice.dto.post.*;
 import com.todomypet.communityservice.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/board")
@@ -70,5 +66,11 @@ public class BoardController {
                                                         @RequestParam(required = false, defaultValue = "20") int pageSize) {
         BoardListResDTO response = boardService.getMyPostList(userId, nextIndex, pageSize);
         return new SuccessResDTO<BoardListResDTO>(response);
+    }
+
+    @PostMapping("/{postId}/report")
+    public SuccessResDTO<Void> reportPost(@RequestHeader String userId, @PathVariable String postId) {
+        boardService.reportPost(userId, postId);
+        return new SuccessResDTO<>(null);
     }
 }

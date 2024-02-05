@@ -1,6 +1,6 @@
 package com.todomypet.communityservice.controller;
 
-import com.todomypet.communityservice.dto.SuccessResDTO;
+import com.todomypet.communityservice.dto.ect.SuccessResDTO;
 import com.todomypet.communityservice.dto.like.LikeUserListResDTO;
 import com.todomypet.communityservice.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,6 @@
 package com.todomypet.communityservice.dto.reply;
 
-import com.todomypet.communityservice.dto.PageDTO;
+import com.todomypet.communityservice.dto.ect.PageDTO;
 import lombok.Builder;
 import lombok.Getter;
 
