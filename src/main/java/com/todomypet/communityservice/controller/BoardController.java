@@ -22,6 +22,12 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    @GetMapping("/admin/get-all-posts")
+    public SuccessResDTO<AdminGetAllPostDTO> adminGetAllPosts() {
+        AdminGetAllPostDTO response = boardService.getAllPost();
+        return new SuccessResDTO<AdminGetAllPostDTO>(response);
+    }
+
     @Operation(summary = "글 작성", description = "글을 작성하여 발행합니다.")
     @PostMapping("")
     public SuccessResDTO<WritePostResDTO> WritePost(@RequestHeader String userId,

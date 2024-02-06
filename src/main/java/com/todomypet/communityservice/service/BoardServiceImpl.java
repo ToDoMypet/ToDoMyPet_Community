@@ -203,4 +203,38 @@ public class BoardServiceImpl implements BoardService{
         PostResDTO postResDTO = getPostDTOToPostResDTO(userId, getPostDTO);
         return postResDTO;
     }
+
+    @Override
+    public AdminGetAllPostDTO getAllPost() {
+        List<PostResDTO> postResDTOList = new ArrayList<>();
+        List<GetPostDTO> posts = postRepository.findAllPost();
+        for (GetPostDTO getPostDTO : posts) {
+            PetDetailResDTO petDetailResDTO =
+                    petServiceClient.getPetDetailInfo(getPostDTO.getWriter().getId(),
+                            getPostDTO.getPostInfo().getPetId()).getData();
+            GetPostInfoDTO postInfo = getPostDTO.getPostInfo();
+            String backgroundImageUrl = petServiceClient.getBackgroundUrlById(postInfo.getBackgroundId()).getData();
+            PostInfoResDTO postInfoResDTO = PostInfoResDTO.builder().id(postInfo.getId())
+                    .content(postInfo.getContent())
+                    .createdAt(postInfo.getCreatedAt())
+                    .imageUrl(postInfo.getImageUrl())
+                    .likeCount(postInfo.getLikeCount())
+                    .replyCount(postInfo.getReplyCount())
+                    .petId(getPostDTO.getPostInfo().getPetId())
+                    .petName(petDetailResDTO.getName())
+                    .petGrade(petDetailResDTO.getGrade())
+                    .petImageUrl(petDetailResDTO.getImageUrl())
+                    .backgroundId(getPostDTO.getPostInfo().getBackgroundId())
+                    .backgroundImageUrl(backgroundImageUrl)
+                    .build();
+            WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())
+                    .profilePicUrl(getPostDTO.getWriter().getProfilePicUrl()).build();
+
+            PostResDTO postResDTO = PostResDTO.builder().postInfo(postInfoResDTO).writer(writerResDTO).build();
+            postResDTOList.add(postResDTO);
+        }
+
+        AdminGetAllPostDTO response = AdminGetAllPostDTO.builder().postList(postResDTOList).build();
+        return response;
+    }
 }

@@ -49,4 +49,8 @@ public interface PostRepository extends Neo4jRepository<Post, String> {
             "RETURN user{.id, .profilePicUrl, .nickname} AS writer, " +
             "post{.id, .content, .createdAt, .imageUrl, .likeCount, .replyCount, .petId, .backgroundId} AS postInfo")
     GetPostDTO getPostById(String postId);
+
+    @Query("MATCH (post:Post) WITH post MATCH (user:User)-[:WRITE]->(post) RETURN user{.id, .profilePicUrl, .nickname} AS writer, " +
+            "post{.id, .content, .createdAt, .imageUrl, .likeCount, .replyCount, .petId, .backgroundId} AS postInfo")
+    List<GetPostDTO> findAllPost();
 }
