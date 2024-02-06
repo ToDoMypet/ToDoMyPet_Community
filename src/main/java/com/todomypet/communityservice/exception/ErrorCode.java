@@ -17,7 +17,8 @@ public enum ErrorCode {
     DELETED_REPLY(HttpStatus.BAD_REQUEST, "C008", "삭제된 댓글에 대한 요청입니다."),
     FILE_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "C009", "파일 업로드에 실패했습니다."),
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "C010", "존재하지 않는 사용자입니다."),
-    REPLY_CONTENT_NULL(HttpStatus.BAD_REQUEST, "C011", "댓글 내용은 NULL이 될 수 없습니다.")
+    REPLY_CONTENT_NULL(HttpStatus.BAD_REQUEST, "C011", "댓글 내용은 NULL이 될 수 없습니다."),
+    MAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "C012", "메일 전송에 실패했습니다.")
     ;
 
     private final HttpStatus httpStatus;

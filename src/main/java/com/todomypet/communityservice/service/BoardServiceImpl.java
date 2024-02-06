@@ -2,13 +2,12 @@ package com.todomypet.communityservice.service;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 import com.todomypet.communityservice.domain.node.Post;
-import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
-import com.todomypet.communityservice.dto.PageDTO;
+import com.todomypet.communityservice.dto.ect.PageDTO;
+import com.todomypet.communityservice.dto.ect.ReportDTO;
 import com.todomypet.communityservice.dto.pet.PetDetailResDTO;
 import com.todomypet.communityservice.dto.post.*;
-import com.todomypet.communityservice.dto.reply.ReplyListResDTO;
-import com.todomypet.communityservice.dto.reply.ReplyResDTO;
+import com.todomypet.communityservice.dto.user.GetWriterDTO;
 import com.todomypet.communityservice.dto.user.WriterResDTO;
 import com.todomypet.communityservice.exception.CustomException;
 import com.todomypet.communityservice.exception.ErrorCode;
@@ -18,10 +17,8 @@ import com.todomypet.communityservice.repository.UserRepository;
 import com.todomypet.communityservice.repository.WriteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +36,7 @@ public class BoardServiceImpl implements BoardService{
     private final LikeRepository likeRepository;
     private final S3Uploader s3Uploader;
     private final PetServiceClient petServiceClient;
+    private final MailService mailService;
 
     // todo: 서버간 통신에 대한 예외 처리 메소드 만들기
     // todo: ADOPT 관계가 없는 펫에 대한 예외 처리 필요
@@ -236,5 +234,23 @@ public class BoardServiceImpl implements BoardService{
 
         AdminGetAllPostDTO response = AdminGetAllPostDTO.builder().postList(postResDTOList).build();
         return response;
+    }
+
+    @Override
+    @Transactional
+    public void reportPost(String userId, String postId) {
+        GetPostDTO post = postRepository.getPostById(postId);
+        GetPostInfoDTO postInfo = post.getPostInfo();
+        GetWriterDTO writer = post.getWriter();
+        ReportDTO reportInfo = ReportDTO.builder().reportedId(postId).reportedContent(postInfo.getContent())
+                .reportedUri(postInfo.getImageUrl().toString()).reporterId(userId)
+                .writerId(writer.getId())
+                .writerNickname(writer.getNickname()).build();
+        try {
+            mailService.sendReportMail(reportInfo);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.MAIL_SEND_FAIL);
+        }
+
     }
 }

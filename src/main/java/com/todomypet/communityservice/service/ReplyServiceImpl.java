@@ -4,7 +4,7 @@ import com.github.f4b6a3.ulid.UlidCreator;
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
-import com.todomypet.communityservice.dto.PageDTO;
+import com.todomypet.communityservice.dto.ect.PageDTO;
 import com.todomypet.communityservice.dto.reply.*;
 import com.todomypet.communityservice.dto.user.WriterResDTO;
 import com.todomypet.communityservice.exception.CustomException;

@@ -18,4 +18,5 @@ public interface BoardService {
     PostResDTO getPostDetailById(String userId, String postId);
 
     AdminGetAllPostDTO getAllPost();
+    void reportPost(String userId, String postId);
 }

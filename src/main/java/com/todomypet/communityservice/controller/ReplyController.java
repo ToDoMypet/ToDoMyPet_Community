@@ -1,7 +1,7 @@
 package com.todomypet.communityservice.controller;
 
 import com.todomypet.communityservice.dto.reply.*;
-import com.todomypet.communityservice.dto.SuccessResDTO;
+import com.todomypet.communityservice.dto.ect.SuccessResDTO;
 import com.todomypet.communityservice.service.ReplyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
