@@ -5,6 +5,7 @@ import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.ect.PageDTO;
 import com.todomypet.communityservice.dto.ect.ReportDTO;
+import com.todomypet.communityservice.dto.ect.ReportType;
 import com.todomypet.communityservice.dto.pet.PetDetailResDTO;
 import com.todomypet.communityservice.dto.post.*;
 import com.todomypet.communityservice.dto.user.GetWriterDTO;
@@ -242,13 +243,14 @@ public class BoardServiceImpl implements BoardService{
         GetPostDTO post = postRepository.getPostById(postId);
         GetPostInfoDTO postInfo = post.getPostInfo();
         GetWriterDTO writer = post.getWriter();
-        ReportDTO reportInfo = ReportDTO.builder().reportedId(postId).reportedContent(postInfo.getContent())
+        ReportDTO reportInfo = ReportDTO.builder().reportType(ReportType.POST).reportedId(postId).reportedContent(postInfo.getContent())
                 .reportedUri(postInfo.getImageUrl().toString()).reporterId(userId)
                 .writerId(writer.getId())
                 .writerNickname(writer.getNickname()).build();
         try {
             mailService.sendReportMail(reportInfo);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomException(ErrorCode.MAIL_SEND_FAIL);
         }
 

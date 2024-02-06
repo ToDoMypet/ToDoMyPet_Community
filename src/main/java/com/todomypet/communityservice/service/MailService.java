@@ -22,18 +22,19 @@ public class MailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setTo("todomypet@gmail.com");
-        helper.setSubject("[To-do My Pet] 이메일 인증 코드 발송");
+        helper.setSubject("[To-do My Pet] 게시글 신고 접수");
 
-        String htmlContent = "신고 접수 유형: " + reportInfo.getReportType().toString() + "\n";
-        htmlContent += "신고인 Id: " + reportInfo.getReporterId() + "\n";
+        String htmlContent = "신고 접수 유형: " + reportInfo.getReportType().toString() + "<br><br>";
+        htmlContent += "신고인 Id: " + reportInfo.getReporterId() + "<br><br>";
         htmlContent += "신고된 콘텐츠: (이미지 uri)" + reportInfo.getReportedUri() +
-                " (내용)" + reportInfo.getReportedContent() + " (고유번호)" + reportInfo.getReportedId();
+                " (내용)" + reportInfo.getReportedContent() + " (고유번호)" + reportInfo.getReportedId() + "<br><br>";
         htmlContent += "작성자 닉네임: " + reportInfo.getWriterNickname()
-                + ") / 고유번호: " + reportInfo.getWriterId() + "\n";
+                + " / 고유번호: " + reportInfo.getWriterId() + "<br><br>";
 
         helper.setText(htmlContent, true);
 
         helper.setFrom(new InternetAddress("todomypet@gmail.com", "To-do My Pet"));
+
         try {
             javaMailSender.send(message);
         } catch (MailException e) {
