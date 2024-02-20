@@ -19,4 +19,6 @@ public interface BoardService {
 
     AdminGetAllPostDTO getAllPost();
     void reportPost(String userId, String postId);
+
+    String deletePostByAdminAccount(String postId);
 }

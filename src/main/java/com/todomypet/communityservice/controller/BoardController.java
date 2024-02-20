@@ -24,6 +24,12 @@ public class BoardController {
         return new SuccessResDTO<AdminGetAllPostDTO>(response);
     }
 
+    @DeleteMapping("/admin/delete-post/{postId}")
+    public SuccessResDTO<String> deletePost(@PathVariable String postId) {
+        String response = boardService.deletePostByAdminAccount(postId);
+        return new SuccessResDTO<String>(response);
+    }
+
     @Operation(summary = "글 작성", description = "글을 작성하여 발행합니다.")
     @PostMapping("")
     public SuccessResDTO<WritePostResDTO> WritePost(@RequestHeader String userId,
