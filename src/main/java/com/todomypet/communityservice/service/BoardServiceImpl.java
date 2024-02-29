@@ -255,4 +255,10 @@ public class BoardServiceImpl implements BoardService{
         }
 
     }
+
+    @Override
+    public String deletePostByAdminAccount(String postId) {
+        postRepository.deletePostById(postId);
+        return postId;
+    }
 }
