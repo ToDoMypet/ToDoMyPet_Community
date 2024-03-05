@@ -47,7 +47,6 @@ dependencies {
 
     // smtp
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.1.0'
-
 }
 
 dependencyManagement {

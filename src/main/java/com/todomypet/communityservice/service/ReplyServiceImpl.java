@@ -100,7 +100,7 @@ public class ReplyServiceImpl implements ReplyService {
             User writer = r.getWriter();
             replyResDtoList.add(ReplyResDTO.builder().replyInfo(GetReplyInfoDTO.builder().id(r.getId())
                             .createdAt(r.getCreatedAt()).content(r.getContent()).build())
-                    .writer(WriterResDTO.builder().nickname(writer.getNickname())
+                    .writer(WriterResDTO.builder().id(writer.getId()).nickname(writer.getNickname())
                             .profilePicUrl(writer.getProfilePicUrl())
                             .isMyPost(writeRepository.existsWriteBetweenUserAndReply(userId, r.getId())).build()).build());
         }
