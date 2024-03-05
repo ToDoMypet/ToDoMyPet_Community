@@ -21,4 +21,6 @@ public interface BoardService {
     void reportPost(String userId, String postId);
 
     String deletePostByAdminAccount(String postId);
+
+    BoardListResDTO getPostListByUserId(String userId, String targetId, String nextIndex, int pageSize);
 }

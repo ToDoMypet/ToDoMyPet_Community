@@ -71,12 +71,22 @@ public class BoardController {
         return new SuccessResDTO<PostUpdateResDTO>(response);
     }
 
-    @Operation(summary = "내가 쓴 글 조회", description = "로그인된 사용자가 작성한 글 리스트를 조회합니다.")
+    @Operation(summary = "특정 사용자 게시글 조회", description = "사용자가 작성한 글 리스트를 조회합니다.")
     @GetMapping("/my-post-list")
     public SuccessResDTO<BoardListResDTO> getMyPostList(@RequestHeader String userId,
                                                         @RequestParam(required = false) String nextIndex,
                                                         @RequestParam(required = false, defaultValue = "20") int pageSize) {
         BoardListResDTO response = boardService.getMyPostList(userId, nextIndex, pageSize);
+        return new SuccessResDTO<BoardListResDTO>(response);
+    }
+
+    @Operation(summary = "특정 사용자 게시글 조회", description = "사용자가 작성한 글 리스트를 조회합니다.")
+    @GetMapping("/post-list/{targetId}")
+    public SuccessResDTO<BoardListResDTO> getMyPostList(@RequestHeader String userId,
+                                                        @PathVariable String targetId,
+                                                        @RequestParam(required = false) String nextIndex,
+                                                        @RequestParam(required = false, defaultValue = "20") int pageSize) {
+        BoardListResDTO response = boardService.getPostListByUserId(userId, targetId, nextIndex, pageSize);
         return new SuccessResDTO<BoardListResDTO>(response);
     }
 

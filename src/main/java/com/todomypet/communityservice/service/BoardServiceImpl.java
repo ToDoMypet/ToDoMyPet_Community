@@ -158,21 +158,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public BoardListResDTO getMyPostList(String userId, String nextIndex, int pageSize) {
-        log.info(">>> 내가 쓴 글 조회 API 진입: " + userId);
-        if (nextIndex == null) {
-            nextIndex = UlidCreator.getUlid().toString();
-        }
-
-        List<PostResDTO> postResDTOList = new ArrayList<>();
-        List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId, nextIndex, pageSize);
-        PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
-        for (GetPostDTO getPostDTO : getPostDTOList) {
-            postResDTOList.add(getPostDTOToPostResDTO(userId, getPostDTO));
-        }
-
-        BoardListResDTO boardListResDTO = BoardListResDTO.builder()
-                .postList(postResDTOList).pagingInfo(pageInfo).build();
-        return boardListResDTO;
+        return getPostListByUser(userId, nextIndex, pageSize);
     }
 
     @Override
@@ -260,5 +246,27 @@ public class BoardServiceImpl implements BoardService{
     public String deletePostByAdminAccount(String postId) {
         postRepository.deletePostById(postId);
         return postId;
+    }
+
+    @Override
+    public BoardListResDTO getPostListByUserId(String userId, String targetId, String nextIndex, int pageSize) {
+        return getPostListByUser(targetId, nextIndex, pageSize);
+    }
+
+    public BoardListResDTO getPostListByUser(String userId, String nextIndex, int pageSize) {
+        if (nextIndex == null) {
+            nextIndex = UlidCreator.getUlid().toString();
+        }
+
+        List<PostResDTO> postResDTOList = new ArrayList<>();
+        List<GetPostDTO> getPostDTOList = postRepository.getPostListByUserId(userId, nextIndex, pageSize);
+        PageDTO pageInfo = createPageDTO(pageSize, getPostDTOList);
+        for (GetPostDTO getPostDTO : getPostDTOList) {
+            postResDTOList.add(getPostDTOToPostResDTO(userId, getPostDTO));
+        }
+
+        BoardListResDTO boardListResDTO = BoardListResDTO.builder()
+                .postList(postResDTOList).pagingInfo(pageInfo).build();
+        return boardListResDTO;
     }
 }
