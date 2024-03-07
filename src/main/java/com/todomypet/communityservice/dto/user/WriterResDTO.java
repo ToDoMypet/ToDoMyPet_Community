@@ -10,4 +10,5 @@ public class WriterResDTO {
     private String profilePicUrl;
     private String nickname;
     private boolean isMyPost;
+    private boolean deleted;
 }

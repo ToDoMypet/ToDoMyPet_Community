@@ -102,6 +102,7 @@ public class ReplyServiceImpl implements ReplyService {
                             .createdAt(r.getCreatedAt()).content(r.getContent()).build())
                     .writer(WriterResDTO.builder().id(writer.getId()).nickname(writer.getNickname())
                             .profilePicUrl(writer.getProfilePicUrl())
+                            .deleted(writer.getDeleted())
                             .isMyPost(writeRepository.existsWriteBetweenUserAndReply(userId, r.getId())).build()).build());
         }
         PageDTO pageInfo;
