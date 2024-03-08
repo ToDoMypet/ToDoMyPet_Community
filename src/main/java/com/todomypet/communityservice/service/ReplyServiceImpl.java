@@ -1,6 +1,7 @@
 package com.todomypet.communityservice.service;
 
 import com.github.f4b6a3.ulid.UlidCreator;
+import com.todomypet.communityservice.domain.node.NotificationType;
 import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
@@ -57,7 +58,7 @@ public class ReplyServiceImpl implements ReplyService {
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
 
             notificationServiceClient.sendReplyNotification(SendReplyNotificationReqDTO.builder()
-                    .userId(writer.getId()).type("REPLY")
+                    .userId(writer.getId()).type(NotificationType.REPLY)
                     .senderProfilePicUrl(sender.getProfilePicUrl()).senderName(sender.getNickname())
                     .notificationDataId(postId).notificationContent(reply.getContent()).build());
         } catch (Exception e) {

@@ -26,6 +26,7 @@ public class LikeServiceImpl implements LikeService{
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
     private final UserMapper userMapper;
+    private final NotificationServiceClient notificationServiceClient;
 
     @Override
     @Transactional

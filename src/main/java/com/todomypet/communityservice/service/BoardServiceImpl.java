@@ -39,9 +39,6 @@ public class BoardServiceImpl implements BoardService{
     private final PetServiceClient petServiceClient;
     private final MailService mailService;
 
-    // todo: 서버간 통신에 대한 예외 처리 메소드 만들기
-    // todo: ADOPT 관계가 없는 펫에 대한 예외 처리 필요
-
     private PostResDTO getPostDTOToPostResDTO(String userId, GetPostDTO getPostDTO) {
 
         PetDetailResDTO petDetailResDTO =
