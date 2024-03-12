@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -53,16 +54,13 @@ public class ReplyServiceImpl implements ReplyService {
         writeRepository.setWriteBetweenReplyAndUser(userId, responseId);
         postRepository.increaseReplyCountById(postId);
 
-        try {
-            User writer = userRepository.findWriterByPostId(postId)
-                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
-
+        User writer = userRepository.findWriterByPostId(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+        if (!writer.getId().equals(userId)) {
             notificationServiceClient.sendReplyNotification(SendReplyNotificationReqDTO.builder()
                     .userId(writer.getId()).type(NotificationType.REPLY)
                     .senderProfilePicUrl(sender.getProfilePicUrl()).senderName(sender.getNickname())
                     .notificationDataId(postId).notificationContent(reply.getContent()).build());
-        } catch (Exception e) {
-            log.error(">>> 알림 발송 실패: " + userId);
         }
 
         return responseId;
