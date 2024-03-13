@@ -10,4 +10,5 @@ public class UserProfileResDTO {
     private String nickname;
     private String bio;
     private String profilePicUrl;
+    private boolean isMyLike;
 }

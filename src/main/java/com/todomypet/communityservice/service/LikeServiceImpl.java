@@ -69,7 +69,9 @@ public class LikeServiceImpl implements LikeService{
         List<User> userList = userRepository.getLikeUserList(postId);
         ArrayList<UserProfileResDTO> userProfileResDTOList = new ArrayList<UserProfileResDTO>();
         for (User u : userList) {
-            userProfileResDTOList.add(userMapper.userToUserProfileResDTO(u));
+            userProfileResDTOList.add(UserProfileResDTO.builder().id(u.getId())
+                    .nickname(u.getNickname()).profilePicUrl(u.getProfilePicUrl()).isMyLike(userId.equals(u.getId()))
+                    .build());
         }
         LikeUserListResDTO response = LikeUserListResDTO.builder().likeList(userProfileResDTOList).build();
         return response;
