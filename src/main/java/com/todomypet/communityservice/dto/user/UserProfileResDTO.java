@@ -6,6 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserProfileResDTO {
+    private String id;
     private String nickname;
     private String bio;
     private String profilePicUrl;
