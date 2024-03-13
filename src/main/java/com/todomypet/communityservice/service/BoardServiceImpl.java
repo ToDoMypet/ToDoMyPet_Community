@@ -59,8 +59,9 @@ public class BoardServiceImpl implements BoardService{
                 .backgroundId(getPostDTO.getPostInfo().getBackgroundId())
                 .backgroundImageUrl(backgroundImageUrl)
                 .isLiked(likeRepository.existsLikeByUserAndPost(userId, postInfo.getId())).build();
-        WriterResDTO writerResDTO = WriterResDTO.builder().nickname(getPostDTO.getWriter().getNickname())
-                .profilePicUrl(getPostDTO.getWriter().getProfilePicUrl()).deleted(getPostDTO.getWriter().isDeleted())
+        GetWriterDTO writer = getPostDTO.getWriter();
+        WriterResDTO writerResDTO = WriterResDTO.builder().id(writer.getId()).nickname(writer.getNickname())
+                .profilePicUrl(writer.getProfilePicUrl()).deleted(writer.isDeleted())
                 .isMyPost(writeRepository.existsWriteBetweenUserAndPost(userId, postInfo.getId())).build();
 
         return PostResDTO.builder().postInfo(postInfoResDTO).writer(writerResDTO).build();
