@@ -132,7 +132,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void updatePost(String userId, String postId, PostUpdateReqDTO postUpdateReqDTO) {
         log.info(">>> 글 수정 API 진입: " + userId);
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
+        Post post = postRepository.findPostById(postId).orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_EXIST));
         if (post.getDeleted()) {
             throw new CustomException(ErrorCode.DELETED_POST);
         }
