@@ -156,4 +156,10 @@ public class ReplyServiceImpl implements ReplyService {
             throw new CustomException(ErrorCode.MAIL_SEND_FAIL);
         }
     }
+
+    @Override
+    public String deleteReplyByReplyId(String replyId) {
+        replyRepository.deleteReplyById(replyId);
+        return replyId;
+    }
 }

@@ -65,4 +65,10 @@ public class ReplyController {
         replyService.reportReply(userId, replyId);
         return new SuccessResDTO<>(null);
     }
+
+    @DeleteMapping("/admin/delete-reply/{replyId}")
+    public SuccessResDTO<String> deleteReply(@PathVariable String replyId) {
+        String response = replyService.deleteReplyByReplyId(replyId);
+        return new SuccessResDTO<String>(response);
+    }
 }

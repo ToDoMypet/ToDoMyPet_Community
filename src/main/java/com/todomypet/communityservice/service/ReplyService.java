@@ -10,4 +10,6 @@ public interface ReplyService {
     void updateReply(String userId, String postId, String replyId, ReplyUpdateReqDTO updateInfo);
 
     void reportReply(String userId, String replyId);
+
+    String deleteReplyByReplyId(String replyId);
 }
