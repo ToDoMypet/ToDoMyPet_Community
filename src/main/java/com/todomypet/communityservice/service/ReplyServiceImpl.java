@@ -6,6 +6,8 @@ import com.todomypet.communityservice.domain.node.Post;
 import com.todomypet.communityservice.domain.node.Reply;
 import com.todomypet.communityservice.domain.node.User;
 import com.todomypet.communityservice.dto.ect.PageDTO;
+import com.todomypet.communityservice.dto.ect.ReportDTO;
+import com.todomypet.communityservice.dto.ect.ReportType;
 import com.todomypet.communityservice.dto.reply.*;
 import com.todomypet.communityservice.dto.user.WriterResDTO;
 import com.todomypet.communityservice.exception.CustomException;
@@ -20,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +34,7 @@ public class ReplyServiceImpl implements ReplyService {
     private final ToRepository toRepository;
     private final WriteRepository writeRepository;
     private final NotificationServiceClient notificationServiceClient;
+    private final MailService mailService;
 
     @Override
     @Transactional
@@ -137,5 +139,21 @@ public class ReplyServiceImpl implements ReplyService {
             throw new CustomException(ErrorCode.REPLY_CONTENT_NULL);
         }
         replyRepository.update(replyId, updateInfo.getContent());
+    }
+
+    @Override
+    public void reportReply(String userId, String replyId) {
+        Reply reply = replyRepository.findReplyById(replyId).orElseThrow();
+        User writer = userRepository.findWriterByReplyId(replyId).orElseThrow();
+        ReportDTO reportInfo = ReportDTO.builder().reportType(ReportType.REPLY).reportedId(replyId)
+                .reportedContent(reply.getContent()).reporterId(userId)
+                .writerId(writer.getId())
+                .writerNickname(writer.getNickname()).build();
+        try {
+            mailService.sendReportMail(reportInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.MAIL_SEND_FAIL);
+        }
     }
 }

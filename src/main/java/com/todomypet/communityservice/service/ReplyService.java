@@ -8,4 +8,6 @@ public interface ReplyService {
     ReplyListResDTO getReplyList(String userId, String postId, String nextIndex, int pageSize);
 
     void updateReply(String userId, String postId, String replyId, ReplyUpdateReqDTO updateInfo);
+
+    void reportReply(String userId, String replyId);
 }

@@ -90,6 +90,7 @@ public class BoardController {
         return new SuccessResDTO<BoardListResDTO>(response);
     }
 
+    @Operation(summary = "게시글 신고", description = "게시글을 신고합니다.")
     @PostMapping("/{postId}/report")
     public SuccessResDTO<Void> reportPost(@RequestHeader String userId, @PathVariable String postId) {
         boardService.reportPost(userId, postId);

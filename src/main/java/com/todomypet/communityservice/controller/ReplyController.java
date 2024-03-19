@@ -58,4 +58,11 @@ public class ReplyController {
         ReplyUpdateResDTO response = ReplyUpdateResDTO.builder().postId(postId).build();
         return new SuccessResDTO<ReplyUpdateResDTO>(response);
     }
+
+    @Operation(summary = "댓글 신고", description = "댓글을 신고합니다.")
+    @PostMapping("/{replyId}/report")
+    public SuccessResDTO<Void> reportPost(@RequestHeader String userId, @PathVariable String replyId) {
+        replyService.reportReply(userId, replyId);
+        return new SuccessResDTO<>(null);
+    }
 }
