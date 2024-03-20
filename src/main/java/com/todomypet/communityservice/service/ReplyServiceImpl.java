@@ -158,8 +158,11 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    @Transactional
     public String deleteReplyByReplyId(String replyId) {
         replyRepository.deleteReplyById(replyId);
+        Post post = postRepository.getPostByReplyId(replyId).orElseThrow();
+        postRepository.decreaseReplyCountById(post.getId());
         return replyId;
     }
 }
